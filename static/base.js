@@ -31,7 +31,7 @@ var game = {
         this.ctx = this.canvas.getContext("2d");
 
         this.controller = new Controller();
-        this.controller.initKeyboard(game.canvas);
+        this.controller.init(game.canvas);
 
         this.controller.keyPressed = this.keyPressed.bind(this);
     },
@@ -80,6 +80,11 @@ var game = {
         else this.start();
     },
 
+    leftAttack: [81, 87, 69, 82, 84, 65, 83, 68, 70, 71, 90, 88, 67, 86],
+    rightAttack: [89, 85, 73, 79, 80, 91, 123, 93, 125, 92, 124, 72, 74, 75, 76, 59, 58, 39, 34, 66, 78, 77, 44, 60, 46, 62, 47, 63],
+    jump: [32],
+    slide: [16, 17],
+
     keyPressed: function(e) {
         console.log(e);
     }
@@ -87,6 +92,9 @@ var game = {
 
 function start() {
     game.init();
+    var gpbutton = document.getElementById("gpbutton");
+    if (gpbutton)
+        gpbutton.addEventListener("click", game.controller.startScan.bind(game.controller));
     game.start();
 }
 
@@ -107,9 +115,6 @@ window.trigger = function() {
         window.keyboardLog = null;
     }
     if (window.playerModuleLoaded && window.keyboardModuleLoaded) {
-        var gpbutton = document.getElementById("gpbutton");
-        if (gpbutton)
-            gpbutton.addEventListener("click", game.controller.startScan.bind(game.controller));
         start();
     }
 }
