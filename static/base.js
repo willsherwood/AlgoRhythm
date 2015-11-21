@@ -9,8 +9,8 @@ function createCanvas(width, height) {
 }
 
 var game = {
-    width: 640,
-    height: 480,
+    width: 1024,
+    height: 576,
 
     running: false,
 
@@ -19,7 +19,7 @@ var game = {
 
     controller: null,
 
-    objects: [x],
+    objects: [new Level()],
 
     grid: [[0, 0, 0, 0, 0, 0, 0, 0],
            [0, 0, 1, 1, 1, 0, 0, 0],
