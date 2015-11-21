@@ -26,10 +26,10 @@ var game = {
            [0, 0, 0, 0, 0, 0, 0, 0],
            [1, 1, 1, 1, 1, 1, 1, 1]],
 
-    attack1Keys: [],
-    attack2Keys: [],
-    jumpKeys: [],
-    slideKeys: [],
+    leftAttack: [81, 87, 69, 82, 84, 65, 83, 68, 70, 71, 90, 88, 67, 86],
+    rightAttack: [89, 85, 73, 79, 80, 91, 123, 93, 125, 92, 124, 72, 74, 75, 76, 59, 58, 39, 34, 66, 78, 77, 44, 60, 46, 62, 47, 63],
+    jump: [32],
+    slide: [16, 17],
 
     init: function() {
         this.canvas = createCanvas(this.width, this.height);
@@ -84,11 +84,6 @@ var game = {
         if (this.running) this.stop();
         else this.start();
     },
-
-    leftAttack: [81, 87, 69, 82, 84, 65, 83, 68, 70, 71, 90, 88, 67, 86],
-    rightAttack: [89, 85, 73, 79, 80, 91, 123, 93, 125, 92, 124, 72, 74, 75, 76, 59, 58, 39, 34, 66, 78, 77, 44, 60, 46, 62, 47, 63],
-    jump: [32],
-    slide: [16, 17],
 
     keyPressed: function(e) {
         console.log(e);
