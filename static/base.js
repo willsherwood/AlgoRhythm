@@ -19,7 +19,7 @@ var game = {
 
     controller: null,
 
-    objects: [new Level()],
+    objects: [],
 
     grid: [[0, 0, 0, 0, 0, 0, 0, 0],
            [0, 0, 1, 1, 1, 0, 0, 0],
@@ -46,11 +46,12 @@ var game = {
         this.controller.init(game.canvas);
 
         this.music = new Music();
-        this.music.init("http://www.w3schools.com/html/horse.ogg", (function() {
+        this.music.init("test.mp3", (function() {
             this.music.play();
         }).bind(this));
 
         this.controller.keyPressed = this.keyPressed.bind(this);
+        this.objects.push(new Level())
     },
 
     drawGrid: function() {
@@ -146,7 +147,7 @@ window.trigger = function() {
         window.keyboardLog.forEach(writeMessage);
         window.keyboardLog = null;
     }
-    if (window.playerModuleLoaded && window.keyboardModuleLoaded && window.musicModuleLoaded) {
+    if (window.playerModuleLoaded && window.keyboardModuleLoaded && window.musicModuleLoaded && window.levelModuleLoaded) {
         start();
     }
 }

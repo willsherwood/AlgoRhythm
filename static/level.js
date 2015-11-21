@@ -17,7 +17,7 @@ Level.prototype.updateVisible = function (frame) {
 
 Level.prototype.draw = function (g) {
 
-    var currentTime = game.music.getTime();
+    var currentTime = game.music.getTime() * 1000;
     var frame = Math.floor(currentTime / 60);
 
     for (var i = 0; i < this.visible.length; i++) {
@@ -27,4 +27,7 @@ Level.prototype.draw = function (g) {
             x.visible = time;
         x.draw(g, time - x.visible);
     }
-}
+};
+
+window.levelModuleLoaded = true;
+window.trigger && window.trigger();
