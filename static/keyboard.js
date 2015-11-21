@@ -95,19 +95,22 @@ Controller.prototype.updateGamepads = function() {
 };
 
 Controller.prototype.handleKeyDown = function(e) {
-    console.log(e);
     var kc = e.which || e.keyCode;
+    var rc = true;
     if (!this.pressedKeys[kc])
-        this.keyPressed(kc);
+        rc = this.keyPressed(kc);
     this.pressedKeys[kc] = true;
-    return false;
+    if (!rc) e.preventDefault();
+    return rc;
 };
 
 Controller.prototype.handleKeyUp = function(e) {
     var kc = e.which || e.keyCode;
+    var rc = true;
     if (this.pressedKeys[kc])
-        this.keyReleased(kc);
+        rc = this.keyReleased(kc);
     this.pressedKeys[kc] = false;
+    if (!rc) e.preventDefault();
     return false;
 };
 
