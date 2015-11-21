@@ -51,7 +51,15 @@ var game = {
         }).bind(this));
 
         this.controller.keyPressed = this.keyPressed.bind(this);
-        this.objects.push(new Level())
+        var a = new XMLHttpRequest();
+        a.onreadystatechange = (function() {
+            if (a.readyState == 4 && a.status == 200) {
+                var json = JSON.parse(a.responseText);
+                this.objects.push(new Level(json));
+            }
+        }).bind(this);
+        a.open("GET", "samplelevel.json", true);
+        a.send();
     },
 
     drawGrid: function() {
