@@ -29,6 +29,9 @@ var game = {
     init: function() {
         this.canvas = createCanvas(this.width, this.height);
         this.ctx = this.canvas.getContext("2d");
+        this.controller = new Controller();
+        this.controller.initKeyboard(game.canvas);
+        this.controller.keyPressed = this.keyPressed.bind(this);
     },
 
     drawGrid: function() {
@@ -73,13 +76,15 @@ var game = {
     toggle: function() {
         if (this.running) this.stop();
         else this.start();
+    },
+
+    keyPressed: function(e) {
+        console.log(e);
     }
 };
 
 function start() {
     game.init();
-    game.controller = new Controller();
-    game.controller.initKeyboard(game.canvas);
     game.start();
 }
 

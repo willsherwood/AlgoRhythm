@@ -88,7 +88,7 @@ Controller.prototype.updateGamepads = function() {
 
 Controller.prototype.handleKeyDown = function(e) {
     var kc = e.key || e.which || e.keyCode;
-    if (!pressedKeys[kc])
+    if (!this.pressedKeys[kc])
         this.keyPressed(kc);
     this.pressedKeys[kc] = true;
     return false;
@@ -96,7 +96,7 @@ Controller.prototype.handleKeyDown = function(e) {
 
 Controller.prototype.handleKeyUp = function(e) {
     var kc = e.key || e.which || e.keyCode;
-    if (pressedKeys[kc])
+    if (this.pressedKeys[kc])
         this.keyReleased(kc);
     this.pressedKeys[kc] = false;
     return false;
