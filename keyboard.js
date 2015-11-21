@@ -20,10 +20,7 @@ function Controller() {
 }
 
 Controller.prototype.startScan = function() {
-    if ('ongamepadconnected' in window) {
-        window.addEventListener("gamepadconnected", this.gpConnect.bind(this));
-        window.addEventListener("gamepaddisconnected", this.gpDisconnect.bind(this));
-    } else {
+    if (!('ongamepadconnected' in window)) {
         kbLog("Scanning for gamepads...");
         this.scanInterval = window.setInterval(this.gpScan.bind(this), 500);
     }
@@ -114,7 +111,9 @@ Controller.prototype.handleKeyUp = function(e) {
     return false;
 };
 
-Controller.prototype.initKeyboard = function(el) {
+Controller.prototype.init = function(el) {
+    window.addEventListener("gamepadconnected", this.gpConnect.bind(this));
+    window.addEventListener("gamepaddisconnected", this.gpDisconnect.bind(this));
     el.addEventListener("keydown", this.handleKeyDown.bind(this), true);
     el.addEventListener("keyup", this.handleKeyUp.bind(this), true);
 }

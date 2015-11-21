@@ -33,8 +33,6 @@ var game = {
         this.controller = new Controller();
         this.controller.initKeyboard(game.canvas);
 
-        this.controller.startScan();
-
         this.controller.keyPressed = this.keyPressed.bind(this);
     },
 
@@ -109,6 +107,9 @@ window.trigger = function() {
         window.keyboardLog = null;
     }
     if (window.playerModuleLoaded && window.keyboardModuleLoaded) {
+        var gpbutton = document.getElementById("gpbutton");
+        if (gpbutton)
+            gpbutton.addEventListener("click", game.controller.startScan.bind(game.controller));
         start();
     }
 }
