@@ -45,6 +45,11 @@ var game = {
         this.controller = new Controller();
         this.controller.init(game.canvas);
 
+        this.music = new Music();
+        this.music.init("http://www.w3schools.com/html/horse.ogg", (function() {
+            this.music.play();
+        }).bind(this));
+
         this.controller.keyPressed = this.keyPressed.bind(this);
     },
 
@@ -141,7 +146,7 @@ window.trigger = function() {
         window.keyboardLog.forEach(writeMessage);
         window.keyboardLog = null;
     }
-    if (window.playerModuleLoaded && window.keyboardModuleLoaded) {
+    if (window.playerModuleLoaded && window.keyboardModuleLoaded && window.musicModuleLoaded) {
         start();
     }
 }
