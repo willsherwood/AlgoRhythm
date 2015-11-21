@@ -124,6 +124,7 @@ var game = {
 };
 
 function start() {
+    if (game.running) return;
     game.init();
     var gpbutton = document.getElementById("gpbutton");
     if (gpbutton)
@@ -142,12 +143,14 @@ function writeMessage(m) {
     }
 }
 
+window.domReady = false;
+
 window.trigger = function() {
     if (window.keyboardLog) {
         window.keyboardLog.forEach(writeMessage);
         window.keyboardLog = null;
     }
-    if (window.playerModuleLoaded && window.keyboardModuleLoaded && window.musicModuleLoaded && window.levelModuleLoaded) {
+    if (domReady && window.playerModuleLoaded && window.keyboardModuleLoaded && window.musicModuleLoaded && window.levelModuleLoaded) {
         start();
     }
 }
@@ -162,4 +165,6 @@ window.addEventListener("DOMContentLoaded", function() {
     var button = document.getElementById("startstop");
     if (button)
         button.addEventListener("click", game.toggle.bind(game));
+    domReady = true;
+    trigger();
 });
