@@ -14,6 +14,7 @@ function Controller() {
     this.gamepadPressed = [];
     this.pressedKeys = {};
     this.scanInterval = null;
+    this.foundByScan = false;
     this.keyPressed = function(){};
     this.keyReleased = function(){};
 }
@@ -44,6 +45,8 @@ Controller.prototype.gpConnect = function(e) {
     }
     this.gamepad = e.gamepad;
     this.gamepadKeys = new Array(this.gamepad.buttons.length);
+    for (var i=0; i<this.gamepad.buttons.length; i+=1)
+        this.gamepadKeys[i] = String.fromCharCode('a'.charCodeAt(0) + i);
     this.gamepadPressed = new Array(this.gamepad.buttons.length);
     this.stopScan(true);
 };
@@ -53,10 +56,16 @@ Controller.prototype.gpDisconnect = function(e) {
     this.gamepad = null;
 };
 
-Controller.prototype.gpScan = function() {
+Controller.prototype.gpSet = function() {
     var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
-    if (gamepads.length > 0) {
-        this.gpConnect({gamepad: gamepads[0]});
+    return gamepads[0];
+};
+
+Controller.prototype.gpScan = function() {
+    var gamepad = this.gpSet();
+    if (gamepad) {
+        this.foundByScan = true;
+        this.gpConnect({gamepad: gamepad});
         kbLog("Stopping scan.");
         window.clearInterval(this.scanInterval);
         this.scanInterval = null;
@@ -64,6 +73,8 @@ Controller.prototype.gpScan = function() {
 };
 
 Controller.prototype.updateGamepads = function() {
+    if (this.foundByScan)
+        this.gamepad = navigator.getGamepads()[0];
     if (!this.gamepad) return;
     if (!this.gamepad.connected) {
         kbLog("Gamepad disconnected. Not scanning.");
@@ -79,14 +90,15 @@ Controller.prototype.updateGamepads = function() {
             pressed = button == 1.0;
         if ((!pressed != !this.gamepadPressed[i]) && this.gamepadKeys[i])
             if (pressed)
-                this.handleKeyPressed({key: this.gamepadKeys[i]});
+                this.handleKeyDown({key: this.gamepadKeys[i]});
             else
-                this.handleKeyReleased({key: this.gamepadKeys[i]});
+                this.handleKeyUp({key: this.gamepadKeys[i]});
         this.gamepadPressed[i] = pressed;
     }
 };
 
 Controller.prototype.handleKeyDown = function(e) {
+    console.log(e);
     var kc = e.key || e.which || e.keyCode;
     if (!this.pressedKeys[kc])
         this.keyPressed(kc);

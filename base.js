@@ -19,7 +19,7 @@ var game = {
 
     controller: null,
 
-    objects: [],
+    objects: [x],
 
     grid: [[0, 0, 0, 0, 0, 0, 0, 0],
            [0, 0, 1, 1, 1, 0, 0, 0],
@@ -29,8 +29,12 @@ var game = {
     init: function() {
         this.canvas = createCanvas(this.width, this.height);
         this.ctx = this.canvas.getContext("2d");
+
         this.controller = new Controller();
         this.controller.initKeyboard(game.canvas);
+
+        this.controller.startScan();
+
         this.controller.keyPressed = this.keyPressed.bind(this);
     },
 
@@ -49,7 +53,7 @@ var game = {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.drawGrid();
         for (var i = 0; i < this.objects.length; i++)
-            this.objects[i].draw();
+            this.objects[i].draw(this.ctx);
         this.controller.updateGamepads();
         if (this.running)
             window.requestAnimationFrame(this.redraw.bind(this));
