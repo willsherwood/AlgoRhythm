@@ -26,6 +26,11 @@ var game = {
            [0, 0, 0, 0, 0, 0, 0, 0],
            [1, 1, 1, 1, 1, 1, 1, 1]],
 
+    attack1Keys: [],
+    attack2Keys: [],
+    jumpKeys: [],
+    slideKeys: [],
+
     init: function() {
         this.canvas = createCanvas(this.width, this.height);
         this.ctx = this.canvas.getContext("2d");
