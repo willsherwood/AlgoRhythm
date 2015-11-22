@@ -49,9 +49,11 @@ var game = {
         this.ctx = this.buffer.getContext("2d");
         this.scoreText = document.createElement("p");
         this.scoreText.id = "scoretext";
+        this.scoreText.textContent = "Score: 0";
         container.appendChild(this.scoreText);
         this.comboText = document.createElement("p");
         container.appendChild(this.comboText);
+        this.comboText.textContent = "";
 
         this.controller = new Controller();
         this.controller.init(game.canvas);
@@ -153,10 +155,19 @@ var game = {
                 ii++;
             }
             if (wm <= level.tolerance) {
+                var score = this.computeScore(wm);
                 this.combo++;
-                this.score += this.computeScore(wm);
+                this.score += score;
                 this.updateScore();
                 level.events[wi].done = true;
+                if (score == 30)
+                    this.objects.push(new Particle("peri", game.width / 2, game.height / 2));
+                else if (score == 20)
+                    this.objects.push(new Particle("grei", game.width / 2, game.height / 2));
+                else if (score == 10)
+                    this.objects.push(new Particle("gooi", game.width / 2, game.height / 2));
+                else if (score == 5)
+                    this.objects.push(new Particle("badi", game.width / 2, game.height / 2));
             }
             return false;
         } else return true;
@@ -211,7 +222,23 @@ var game = {
 
     updateScore: function() {
         this.scoreText.textContent = "Score: " + this.score;
-        this.comboText.textContent = this.combo + " combo";
+        if (this.combo > 1) {
+            this.comboText.textContent = this.combo + " combo";
+            var fs = 36;
+            if (this.combo > 20)
+                fs = 48;
+            if (this.combo > 50)
+                fs = 60;
+            if (this.combo > 100)
+                fs = 72;
+            if (this.combo > 200)
+                fs = 84;
+            if (this.combo > 300)
+                fs = 100;
+            if (this.combo > 500)
+                fs = 144;
+            this.comboText.style.fontSize = fs + "pt";
+        }
     }
 };
 
