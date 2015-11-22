@@ -309,7 +309,7 @@ var game = {
                 if (delay * level.bpm / 60 * 4 < 0.75)
                     snapdivisions = 8;
             }
-            time = Math.round(time * level.bpm / 60 * snapdivisions) * 60 / level.bpm / snapdivisions;
+            time = Math.round((time - level.offset) * level.bpm / 60 * snapdivisions) * 60 / level.bpm / snapdivisions + level.offset;
             if (func == 'jump') {
                 this.generateObject("spike", time);
                 this.generateEvent("jump", time, false);
