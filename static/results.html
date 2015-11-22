@@ -51,9 +51,9 @@ output("p", "Max Combo: " + qs.maxCombo);
 output("p", "Total error: " + (qs.accuracy * 60 / qs.bpm).toFixed(3));
 output("p", "Average error: " + ae.toFixed(4));
 var grade = "F";
-if (ae < 0.2)
-  grade = "D";
 if (ae < 0.1)
+  grade = "D";
+if (ae < 0.07)
   grade = "C";
 if (ae < 0.05)
   grade = "B";
