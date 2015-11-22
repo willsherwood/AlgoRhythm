@@ -142,6 +142,7 @@ var game = {
 
     stop: function() {
         this.running = false;
+        this.music.stop();
         this.updateRunningText();
     },
 
