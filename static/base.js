@@ -56,6 +56,9 @@ var game = {
         this.jumpKeys.forEach(function(k) {this.keymap[k] = 'jump';}, this);
         this.slideKeys.forEach(function(k) {this.keymap[k] = 'slide';}, this);
 
+        var titleh1 = document.createElement("h1");
+        titleh1.textContent = this.queryString.title;
+        document.body.appendChild(titleh1);
         var container = document.createElement("div");
         container.id = "gamearea";
         container.style.width = this.width + "px";
