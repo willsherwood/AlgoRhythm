@@ -46,24 +46,28 @@ Background.prototype.init = function () {
 };
 
 Background.prototype.draw = function () {
-    this.mod++;
+    if (!game.music.isPaused())
+        this.mod++;
     game.ctx.drawImage(document.getElementById('sky'), 0, 0);
     game.ctx.drawImage(document.getElementById('stars'), 0, 0);
     for (var i=0; i< this.A.length; i++) {
         var q = this.A[i];
-        q.current += 1 / q.mod;
+        if (!game.music.isPaused())
+            q.current += 1 / q.mod;
         if (q.current < -200) continue;
         game.ctx.drawImage(q.img, q.current, this.groundY - q.img.height);
     }
     for (var i=0; i< this.B.length; i++) {
         var q = this.B[i];
-        q.current += 1 / q.mod;
+        if (!game.music.isPaused())
+            q.current += 1 / q.mod;
         if (q.current < -200) continue;
         game.ctx.drawImage(q.img, q.current, this.groundY - q.img.height);
     }
     for (var i=0; i< this.C.length; i++) {
         var q = this.C[i];
-        q.current += 1 / q.mod;
+        if (!game.music.isPaused())
+            q.current += 1 / q.mod;
         if (q.current < -200) continue;
         game.ctx.drawImage(q.img, q.current, this.groundY - q.img.height);
     }
