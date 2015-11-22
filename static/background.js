@@ -48,6 +48,7 @@ Background.prototype.init = function () {
 Background.prototype.draw = function () {
     this.mod++;
     game.ctx.drawImage(document.getElementById('sky'), 0, 0);
+    game.ctx.drawImage(document.getElementById('stars'), 0, 0);
     for (var i=0; i< this.A.length; i++) {
         var q = this.A[i];
         q.current += 1 / q.mod;
