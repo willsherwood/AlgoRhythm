@@ -26,7 +26,7 @@ function Level(json) {
         this.platforms = [{start: 0, end: Infinity}];
     }
     this.jumpFactor = this.jumpHeight * 4 / (this.jumpTime * this.jumpTime);
-    this.images = {cone: null, pothole: null, redcoin: null, bluecoin: null};
+    this.images = {cone: null, pothole: null, redcoin: null, bluecoin: null, traffic: null};
 }
 
 Level.prototype.regenerate = function() {
@@ -49,6 +49,7 @@ Level.prototype.init = function() {
     this.images.pothole = document.getElementById("pothole");
     this.images.redcoin = document.getElementById("redcoin");
     this.images.bluecoin = document.getElementById("bluecoin");
+    this.images.traffic = document.getElementById("traffic");
 };
 
 Level.prototype.drawObject = function (o, x) {
@@ -63,8 +64,9 @@ Level.prototype.drawObject = function (o, x) {
         var cf = o.rand < 0.5 ? 80 : 30;
         game.ctx.drawImage(i, x - (i.width >> 1) + this.velocity * (this.jumpTime / 2), player.y - (i.height >> 1) - cf);
     } else if (o.type == 'ceiling') {
-        game.ctx.fillRect(x, 0, 1, game.height);
-        game.ctx.fillRect(x + this.velocity * (this.tolerance * 0.5), 0, (this.jumpTime - this.tolerance) * this.velocity, game.height - 160);
+        // game.ctx.fillRect(x, 0, 1, game.height);
+        // game.ctx.fillRect(x + this.velocity * (this.tolerance * 0.5), 0, (this.jumpTime - this.tolerance) * this.velocity, game.height - 160);
+        game.ctx.drawImage(this.images.traffic, x - this.images.traffic.width / 2, 0);
     } else if (o.type == 'red') {
         if (o.dead) return;
         game.ctx.drawImage(this.images.redcoin, x - this.images.redcoin.width / 2, player.y - this.images.redcoin.height / 2 - 64);
