@@ -64,7 +64,7 @@ Level.prototype.draw = function () {
         if (ex < 0) continue;
         if (ex > game.width) ex = game.width;
         game.ctx.fillRect(sx, player.y, ex - sx, game.height - player.y);
-        if (player.x >= sx - this.tolerance && player.x <= ex + this.tolerance) flag = true;
+        if (time >= x.start - this.tolerance && time <= x.end + this.tolerance) flag = true;
     }
     if (!(flag || player.jumping))
         console.log("You died");
