@@ -128,7 +128,7 @@ var game = {
             panel.appendChild(pheading);
             this.music.el.controls = true;
             panel.appendChild(this.music.el);
-            this.music.el.addEventListener("play", this.canvas.focus.bind(this.canvas));
+            this.music.el.addEventListener("play", (function(){if (!window.editing) {this.canvas.focus();}}).bind(this));
             var testButton = document.createElement("button");
             testButton.id = "testbutton";
             testButton.textContent = "Test Level";
@@ -152,7 +152,7 @@ var game = {
                     this.stop();
                     this.music.play();
                 } else {
-                    if (this.tempoTimeout) window.clearTimeout(tempoTimeout);
+                    if (this.tempoTimeout) window.clearTimeout(this.tempoTimeout);
                     this.tempos.push(this.music.getTime());
                     var a = 0;
                     for (var i=0; i<this.tempos.length; i++) {
@@ -175,9 +175,11 @@ var game = {
                     a /= this.tempos.length * temp2 - temp1 * temp1;
                     document.getElementById('editbpm').value = 60 / a;
                     this.objects[0].bpm = 60/a;
-                    setTimeout((function() {
+                    this.tempoTimeout = setTimeout((function() {
                         this.restart();
                         this.music.stop();
+                        this.tempos = [];
+                        this.tempoTap = 0;
                     }).bind(this), 2000);
                 }
                 this.tempoTap++;

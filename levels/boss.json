@@ -1,0 +1,10 @@
+{
+    "velocity": 1000,
+    "jumpTime": 0.4,
+    "jumpHeight": 160,
+    "tolerance": 0.2,
+    "objects": [
+    ],
+    "events": [
+    ]
+}
