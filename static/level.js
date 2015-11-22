@@ -99,9 +99,9 @@ Level.prototype.draw = function () {
         game.ctx.fillRect(sx, player.y, ex - sx, game.height - player.y);
         if (time >= x.start - this.tolerance && time <= x.end + this.tolerance) flag = true;
     }
-    */
     if (!(flag || player.jumping))
         console.log("You died");
+    */
     var py = player.y;
     if (player.jumping) {
         var t = time - player.jumpTime;
