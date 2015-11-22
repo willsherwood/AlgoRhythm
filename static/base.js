@@ -333,9 +333,22 @@ var game = {
                 ii++;
             }
             if (wm <= level.tolerance) {
+                var multiplier = 0.5;
+                if (this.combo > 20)
+                    multiplier = 1;
+                if (this.combo > 50)
+                    multiplier = 1.2;
+                if (this.combo > 100)
+                    multiplier = 1.5;
+                if (this.combo > 200)
+                    multiplier = 1.75;
+                if (this.combo > 300)
+                    multiplier = 2;
+                if (this.combo > 500)
+                    multiplier = 3;
                 var score = this.computeScore(wm);
                 this.combo++;
-                this.score += score;
+                this.score += multiplier * score;
                 this.updateScore();
                 level.events[wi].done = true;
                 if (score == 30)
