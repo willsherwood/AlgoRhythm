@@ -328,7 +328,7 @@ var game = {
             var ii = this.currentEvent + 1;
             while (level.events[ii] && time >= level.events[ii].time - level.tolerance) {
                 var dist = Math.abs(level.events[ii].time - time);
-                if (dist < wm && level.events[ii].type == func) {
+                if (dist < wm && level.events[ii].type == func && !level.events[ii].done) {
                     wm = dist;
                     wi = ii;
                 }
