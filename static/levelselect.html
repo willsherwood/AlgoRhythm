@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Level Select</title>
+<style type="text/css">
+#levels {
+  width: 1024px;
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+tr.selected {
+  background-color: #aaa;
+}
+</style>
+</head>
+<body>
+<table id="levels">
+  <colgroup>
+    <col style="width: 80%" />
+    <col style="width: 20%" />
+  </colgroup>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>BPM</th>
+    </tr>
+  </thead>
+  <tbody id="levelbody">
+  </tbody>
+</table>
+<script type="text/javascript">
+selectedRow = null;
+
+function selectRow() {
+    if (window.selectedRow) {
+        window.selectedRow.classList.remove("selected");
+    }
+    window.selectedRow = this;
+    window.selectedRow.classList.add("selected");
+}
+
+function play() {
+    if (!window.selectedRow) return;
+    var pairs = [];
+    var obj = JSON.parse(window.selectedRow.dataset.parameters);
+    console.log(obj);
+    for (var key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            pairs.push(encodeURIComponent(key) + "=" + encodeURIComponent(obj[key]));
+        }
+    }
+    var qs = "?" + pairs.join("&");
+    var url = "game.html" + qs;
+    window.location = url;
+}
+
+var a = new XMLHttpRequest();
+a.onreadystatechange = function() {
+    if (a.readyState == 4 && a.status == 200) {
+        var json = JSON.parse(a.responseText);
+        var table = document.getElementById("levelbody");
+        json.forEach(function(l) {
+            var tr = document.createElement("tr");
+            var td1 = document.createElement("td");
+            var td2 = document.createElement("td");
+            tr.appendChild(td1);
+            tr.appendChild(td2);
+            td1.textContent = l.title;
+            td2.textContent = l.bpm;
+            tr.dataset.parameters = JSON.stringify(l);
+            tr.addEventListener("click", selectRow);
+            tr.addEventListener("dblclick", play);
+            table.appendChild(tr);
+        });
+    }
+};
+a.open("GET", "../levels/songs.json", true);
+a.send();
+</script>
+<button id="playbutton">PLAY!</button>
+<script type="text/javascript">
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("playbutton").addEventListener("click", play);
+});
+</script>
+</body>
+</html>
