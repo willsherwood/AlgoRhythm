@@ -83,6 +83,7 @@ var game = {
     start: function() {
         if (!this.running) {
             this.running = true;
+            player.init();
             this.updateRunningText();
             this.redraw();
         }
