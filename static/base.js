@@ -372,7 +372,7 @@ var game = {
                 var results = {
                     score: this.score,
                     accuracy: this.accuracy,
-                    maxCombo: this.maxCombo,
+                    maxCombo: this.combo > this.maxCombo ? this.combo : this.maxCombo,
                     title: this.queryString.title,
                     events: this.objects[0].events.length,
                     bpm: this.queryString.bpm
@@ -381,7 +381,13 @@ var game = {
                 for (var key in results)
                     if (results.hasOwnProperty(key))
                         pairs.push(encodeURIComponent(key) + "=" + encodeURIComponent(results[key]));
-                window.location = "results.html?" + pairs.join("&");
+                url = "results.html?" + pairs.join("&");
+                while (document.body.firstChild)
+                    document.body.removeChild(document.body.firstChild);
+                var link = document.createElement("a");
+                link.href = url;
+                link.textContent = "Click to see results";
+                document.body.appendChild(link);
             }).bind(this));
             return false;
         } else if (window.editing && func) {
