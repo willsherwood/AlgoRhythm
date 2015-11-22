@@ -2,6 +2,7 @@ function Level(json) {
     this.objects = json.objects;
     this.events = json.events;
     this.velocity = json.velocity; // pixels/sec
+    this.tolerance = json.tolerance;
     this.jumpTime = json.jumpTime;
     this.jumpHeight = json.jumpHeight;
     this.jumpFactor = this.jumpHeight * 4 / (this.jumpTime * this.jumpTime);
@@ -30,10 +31,12 @@ Level.prototype.drawObject = function (o, x) {
         game.ctx.fillRect(x, 0, 1, game.height);
         game.ctx.fillRect(x + 32, 0, this.jumpTime * this.velocity - 5, game.height - 160);
     } else if (o.type == 'red') {
+        if (o.dead) return;
         game.ctx.fillStyle = "#FF0000";
         game.ctx.fillRect(x - 16, player.y - 32, 32, 32);
         game.ctx.fillStyle = "#000000";
     } else if (o.type == 'blue') {
+        if (o.dead) return;
         game.ctx.fillStyle = "#0000FF";
         game.ctx.fillRect(x - 16, player.y - 32, 32, 32);
         game.ctx.fillStyle = "#000000";
@@ -61,7 +64,7 @@ Level.prototype.draw = function () {
         if (ex < 0) continue;
         if (ex > game.width) ex = game.width;
         game.ctx.fillRect(sx, player.y, ex - sx, game.height - player.y);
-        if (player.x >= sx && player.x <= ex) flag = true;
+        if (player.x >= sx - this.tolerance && player.x <= ex + this.tolerance) flag = true;
     }
     if (!(flag || player.jumping))
         console.log("You died");
@@ -84,6 +87,47 @@ Level.prototype.draw = function () {
     player.draw(py);
 };
 
+function binarySearch(stuff, time) {
+    var lo = 0;
+    var hi = stuff.length - 1;
+    while (hi >= lo) {
+        var i = (lo + hi) >> 1;
+        if (time < stuff[i].time) {
+            hi = i - 1;
+        } else if (time > stuff[i].time) {
+            lo = i + 1;
+        } else {
+            return i;
+        }
+    }
+    return ~lo;
+};
+
+function closest(stuff, time) {
+    var res = binarySearch(stuff, time);
+    if (res >= 0) return res;
+    var mi = ~res;
+    var mm = stuff[mi] ? Math.abs(stuff[mi].time - time) : Infinity;
+    var ii = mi;
+    if (stuff[ii - 2] && Math.abs(stuff[ii - 2].time - time) < mm) {
+        mi = ii - 2;
+        mm = Math.abs(stuff[ii - 2].time - time);
+    }
+    if (stuff[ii - 1] && Math.abs(stuff[ii - 1].time - time) < mm) {
+        mi = ii - 1;
+        mm = Math.abs(stuff[ii - 1].time - time);
+    }
+    if (stuff[ii + 1] && Math.abs(stuff[ii + 1].time - time) < mm) {
+        mi = ii + 1;
+        mm = Math.abs(stuff[ii + 1].time - time);
+    }
+    if (stuff[ii + 2] && Math.abs(stuff[ii + 2].time - time) < mm) {
+        mi = ii + 2;
+        mm = Math.abs(stuff[ii + 2].time - time);
+    }
+    return [mi, mm];
+
+}
 
 window.levelModuleLoaded = true;
 window.trigger && window.trigger();

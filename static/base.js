@@ -35,7 +35,11 @@ var game = {
         this.slideKeys.forEach(function(k) {this.keymap[k] = this.slide.bind(this);}, this);
 
         this.canvas = createCanvas(this.width, this.height);
-        this.ctx = this.canvas.getContext("2d");
+        this.realCtx = this.canvas.getContext("2d");
+        this.buffer = document.createElement("canvas");
+        this.buffer.width = this.width;
+        this.buffer.height = this.height;
+        this.ctx = this.buffer.getContext("2d");
 
         this.controller = new Controller();
         this.controller.init(game.canvas);
@@ -61,6 +65,8 @@ var game = {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         for (var i = 0; i < this.objects.length; i++)
             this.objects[i].draw(this.ctx);
+        this.realCtx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.realCtx.drawImage(this.buffer, 0, 0);
         this.controller.updateGamepads();
         if (this.running)
             window.requestAnimationFrame(this.redraw.bind(this));
@@ -99,10 +105,24 @@ var game = {
 
     attackL: function() {
         console.log("Attacking left");
+        var ce = closest(this.objects[0].objects, this.music.getTime());
+        if (ce[0] < 0) return;
+        if (this.objects[0].objects[ce[0]].type != 'red') return;
+        if (ce[1] < this.objects[0].tolerance) {
+            this.objects[0].objects[ce[0]].dead = true;
+            console.log("Success");
+        }
     },
 
     attackR: function() {
         console.log("Attacking right");
+        var ce = closest(this.objects[0].objects, this.music.getTime());
+        if (ce[0] < 0) return;
+        if (this.objects[0].objects[ce[0]].type != 'blue') return;
+        if (ce[1] < this.objects[0].tolerance) {
+            this.objects[0].objects[ce[0]].dead = true;
+            console.log("Success");
+        }
     },
 
     jump: function() {
