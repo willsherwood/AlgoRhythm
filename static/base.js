@@ -43,6 +43,8 @@ var game = {
     jumpKeys: [32],
     slideKeys: [16, 17],
     bg: null,
+    tempoTap: 0,
+    tempos: [],
 
     missY: 0,
 
@@ -137,6 +139,43 @@ var game = {
             panel.appendChild(this.createParameter("tolerance", "Tolerance (seconds)"));
             panel.appendChild(this.createParameter("jumpTime", "Jump Time (seconds)"));
             panel.appendChild(this.createParameter("jumpHeight", "Jump Height (pixels)"));
+            panel.appendChild(this.createParameter("bpm", "Beats per Minute"));
+
+            var tempo = document.createElement("button");
+            tempo.id = "tempo";
+            tempo.textContent = "Tap for tempo";
+            tempo.addEventListener("click", (function() {
+                if (this.tempoTap == 0)
+                    this.music.play();
+                else {
+                    this.tempos.push(this.music.getTime());
+                    var a = 0;
+                    for (var i=0; i<this.tempos.length; i++) {
+                        a += (i+1) * (this.tempos[i]);
+                    }
+                    a *= this.tempos.length;
+                    var temp1 = 0;
+                    for (var i=0; i<this.tempos.length; i++) {
+                        temp1 += i+1;
+                    }
+                    var temp2 = 0;
+                    for (var i=0; i<this.tempos.length; i++) {
+                        temp2 += this.tempos[i];
+                    }
+                    a -= temp1 * temp2;
+                    temp2 = 0;
+                    for (var i=0; i<this.tempos.length; i++) {
+                        temp2 += (i+1) * (i+1);
+                    }
+                    a /= this.tempos.length * temp2 - temp1 * temp1;
+                    document.getElementById('editbpm').value = 60 / a;
+                    this.objects[0].bpm = 60/a;
+                    this.objects[0].offset = null;
+                }
+                this.tempoTap++;
+            }).bind(this));
+            panel.appendChild(tempo);
+
             this.objects[0].bpm = 120;
             this.objects[0].offset = 0;
         }
