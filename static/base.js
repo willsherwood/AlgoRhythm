@@ -22,6 +22,8 @@ var game = {
     score: 0,
     currentEvent: 0,
     combo: 0,
+    maxCombo: 0,
+    accuracy: 0,
 
     running: false,
 
@@ -257,6 +259,8 @@ var game = {
                     if (this.music.getTime() > ev.time + this.objects[0].tolerance) {
                         this.currentEvent++;
                         if (!ev.done) {
+                            if (this.combo > this.maxCombo)
+                                this.maxCombo = this.combo;
                             this.score -= 25;
                             this.combo = 0;
                             // this is a MISS
@@ -267,6 +271,7 @@ var game = {
                             t.missY += 50;
                             this.objects.push(new Particle("misi", this.width >> 1, ny));
                             this.updateScore();
+                            this.accuracy += this.objects[0].tolerance * 1.5;
                         }
                     }
                 }
@@ -335,6 +340,7 @@ var game = {
                 ii++;
             }
             if (wm <= level.tolerance) {
+                this.accuracy += wm;
                 var multiplier = 0.5;
                 if (this.combo > 20)
                     multiplier = 1;
@@ -362,6 +368,21 @@ var game = {
                 else if (score == 5)
                     this.objects.push(new Particle("badi", game.width / 2, game.height / 2));
             }
+            this.music.el.addEventListener("ended", (function() {
+                var results = {
+                    score: this.score,
+                    accuracy: this.accuracy,
+                    maxCombo: this.maxCombo,
+                    title: this.queryString.title,
+                    events: this.objects[0].events.length,
+                    bpm: this.queryString.bpm
+                };
+                var pairs = [];
+                for (var key in results)
+                    if (results.hasOwnProperty(key))
+                        pairs.push(encodeURIComponent(key) + "=" + encodeURIComponent(results[key]));
+                window.location = "results.html?" + pairs.join("&");
+            }).bind(this));
             return false;
         } else if (window.editing && func) {
             if (player.jumping || player.sliding) {

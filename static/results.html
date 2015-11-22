@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Results</title>
+</head>
+<body>
+<script type="text/javascript">
+function parseQueryString(str) {
+    var vars = str.split('&');
+    var ret = {};
+    for (var i = 0; i < vars.length; i++) {
+        var v = vars[i];
+        var ei = v.indexOf('=');
+        if (ei == -1) {
+            ret[decodeURIComponent(v)] = true;
+            continue;
+        }
+        var key = decodeURIComponent(v.substring(0, ei));
+        var val = decodeURIComponent(v.substring(ei + 1));
+        ret[key] = val;
+    }
+    return ret;
+}
+
+function output(tag, str) {
+    var el = document.createElement(tag);
+    el.textContent = str;
+    document.body.appendChild(el);
+    return el;
+}
+
+var qs = parseQueryString(window.location.search.substring(1));
+var ae = qs.accuracy * 60 / qs.bpm / qs.events;
+output("h1", qs.title);
+output("h2", "Results");
+output("p", "Score: " + qs.score);
+output("p", "Max Combo: " + qs.maxCombo);
+output("p", "Total error: " + (qs.accuracy * 60 / qs.bpm).toFixed(3));
+output("p", "Average error: " + ae.toFixed(4));
+var grade = "F";
+if (ae < 0.2)
+  grade = "D";
+if (ae < 0.1)
+  grade = "C";
+if (ae < 0.05)
+  grade = "B";
+if (ae < 0.01)
+  grade = "A";
+if (ae < 0.0001)
+  grade = "S";
+output("div", grade).id = "grade";
+</script>
+</body>
+</html>
