@@ -59,14 +59,21 @@ Level.prototype.drawObject = function (o, x) {
 
     //TODO: fade out
     if (o.type == 'spike') {
-        game.ctx.fillRect(x, 0, 1, game.height);
+        game.ctx.fillStyle = "#ee99ee";
+        game.ctx.arc(x, player.y - 64, 4, 0, Math.PI * Math.sqrt(2) * Math.sqrt(2));
+        game.ctx.fill();
+        game.ctx.fillStyle = "#000000";
         var i = o.rand < 0.5 ? this.images.cone : this.images.pothole;
         var cf = o.rand < 0.5 ? 80 : 30;
         game.ctx.drawImage(i, x - (i.width >> 1) + this.velocity * (this.jumpTime / 2), player.y - (i.height >> 1) - cf);
     } else if (o.type == 'ceiling') {
+        game.ctx.fillStyle = "#ee99ee";
+        game.ctx.arc(x, player.y - 64, 4, 0, Math.PI * Math.sqrt(2) * Math.sqrt(2));
+        game.ctx.fill();
+        game.ctx.fillStyle = "#000000";
         // game.ctx.fillRect(x, 0, 1, game.height);
         // game.ctx.fillRect(x + this.velocity * (this.tolerance * 0.5), 0, (this.jumpTime - this.tolerance) * this.velocity, game.height - 160);
-        game.ctx.drawImage(this.images.traffic, x - this.images.traffic.width / 2, 0);
+        game.ctx.drawImage(this.images.traffic, x - this.images.traffic.width / 2 + this.velocity * (this.jumpTime / 2), 0);
     } else if (o.type == 'red') {
         if (o.dead) return;
         game.ctx.drawImage(this.images.redcoin, x - this.images.redcoin.width / 2, player.y - this.images.redcoin.height / 2 - 64);
