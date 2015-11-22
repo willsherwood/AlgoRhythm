@@ -107,6 +107,11 @@ var game = {
         this.failSound = new Music();
         this.failSound.init("../res/Audio/fail.ogg", undefined, true);
 
+        var link = document.createElement("a");
+        link.href = "levelselect.html";
+        link.textContent = "Play a different level";
+        document.body.appendChild(link);
+
         if (!this.queryString.editing) {
             var a = new XMLHttpRequest();
             a.onreadystatechange = (function() {
