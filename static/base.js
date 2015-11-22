@@ -243,6 +243,14 @@ var game = {
         }
     },
 
+    restart: function() {
+        if (!this.running) {
+            this.running = true;
+            this.updateRunningText();
+            this.redraw();
+        }
+    },
+
     stop: function() {
         this.running = false;
         this.music.stop();
