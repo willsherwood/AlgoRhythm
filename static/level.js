@@ -26,7 +26,18 @@ Level.prototype.drawObject = function (o, x) {
         game.ctx.fillRect(x, 0, 1, game.height);
         game.ctx.fillRect(x - 16 + this.velocity * (this.jumpTime / 2), player.y - 32, 32, 32);
     }
-    else
+    else if (o.type == 'ceiling') {
+        game.ctx.fillRect(x, 0, 1, game.height);
+        game.ctx.fillRect(x + 32, 0, this.jumpTime * this.velocity - 5, game.height - 160);
+    } else if (o.type == 'red') {
+        game.ctx.fillStyle = "#FF0000";
+        game.ctx.fillRect(x - 16, player.y - 32, 32, 32);
+        game.ctx.fillStyle = "#000000";
+    } else if (o.type == 'blue') {
+        game.ctx.fillStyle = "#0000FF";
+        game.ctx.fillRect(x - 16, player.y - 32, 32, 32);
+        game.ctx.fillStyle = "#000000";
+    } else
         game.ctx.fillRect(x - 16, player.y - 32, 32, 32);
 };
 
@@ -63,8 +74,14 @@ Level.prototype.draw = function () {
         } else
             py = y + player.y;
     }
+    if (player.sliding) {
+        var t = time - player.slideTime;
+        var y = this.jumpFactor * t * (t - this.jumpTime);
+        if (y > 0) {
+            player.sliding = false;
+        }
+    }
     player.draw(py);
-
 };
 
 

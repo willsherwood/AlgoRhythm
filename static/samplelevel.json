@@ -1,10 +1,15 @@
 {
-	"velocity": 1500,
-    "jumpTime": 0.17789865,
-    "jumpHeight": 50,
+    "velocity": 1500,
+    "jumpTime": 0.3,
+    "jumpHeight": 80,
 	"objects": [
 		{"type": "spike", "time": 5},
-		{"type": "enemyGroundL", "time": 9},
+		{"type": "red", "time": 9},
+	    {"type": "blue", "time": 9.5},
+		{"type": "red", "time": 10},
+		{"type": "blue", "time": 10.25},
+		{"type": "red", "time": 10.5},
+		{"type": "blue", "time": 11},
 		{"type": "ceiling", "time": 11}
 	],
 	"events": [

@@ -112,6 +112,8 @@ var game = {
     },
 
     slide: function() {
+        if (!player.sliding)
+            player.slide();
         console.log("Sliding");
     }
 };
