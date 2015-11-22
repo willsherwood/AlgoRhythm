@@ -35,6 +35,8 @@ var game = {
 
         var container = document.createElement("div");
         container.id = "gamearea";
+        container.style.width = this.width + "px";
+        container.style.height = this.height + "px";
         document.body.appendChild(container);
         this.canvas = document.createElement("canvas");
         this.canvas.width = this.width;
@@ -52,8 +54,9 @@ var game = {
         this.scoreText.textContent = "Score: 0";
         container.appendChild(this.scoreText);
         this.comboText = document.createElement("p");
-        container.appendChild(this.comboText);
+        this.comboText.id = "combotext";
         this.comboText.textContent = "";
+        container.appendChild(this.comboText);
 
         this.controller = new Controller();
         this.controller.init(game.canvas);

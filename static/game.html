@@ -7,6 +7,38 @@
         .invisible {
             display: none;
         }
+        #gamearea {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        #gamearea canvas {
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 0;
+        }
+        #scoretext {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            text-align: right;
+            z-index: 5;
+            padding: 0;
+            margin: 0;
+            font-family: "TYPOGRAPH PRO", Verdana, Futura, Helvetica, Arial, sans-serif;
+            font-weight: 900;
+            color: white;
+        }
+        #combotext {
+            margin: 0;
+            text-align: center;
+            width: 100%;
+            z-index: 5000;
+            font-family: "TYPOGRAPH PRO", Verdana, Futura, Helvetica, Arial, sans-serif;
+            font-weight: 900;
+            color: white;
+        }
     </style>
 </head>
 <body>
