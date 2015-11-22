@@ -65,7 +65,7 @@ var game = {
         this.controller.keyPressed = this.keyPressed.bind(this);
 
         this.music = new Music();
-        this.music.init("../res/Music/dancedance.mp3", (function() {
+        this.music.init("../res/Music/hard.ogg", (function() {
             this.music.play();
         }).bind(this));
         this.redSound = new Music();
@@ -85,12 +85,13 @@ var game = {
                 this.objects[0].init();
             }
         }).bind(this);
-        a.open("GET", "samplelevel.json", true);
+        a.open("GET", "hard.json", true);
         a.send();
     },
 
     redraw: function() {
         //this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.controller.updateGamepads();
         this.bg.draw();
         for (var i = this.objects.length - 1; i >= 0; i--) {
             this.objects[i].draw(this.ctx);
@@ -99,7 +100,6 @@ var game = {
         }
         this.realCtx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.realCtx.drawImage(this.buffer, 0, 0);
-        this.controller.updateGamepads();
         if (this.objects.length > 0) {
             if (this.currentEvent < this.objects[0].events.length) {
                 var ev = this.objects[0].events[this.currentEvent];
