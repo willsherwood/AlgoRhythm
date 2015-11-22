@@ -7,11 +7,13 @@ player = {
     slideTime: 0,
     mod: 0,
     images: [],
+    slideImage: null,
 
     init: function() {
         for (var i=1; i<=8; i++) {
             this.images.push(document.getElementById('r'+i));
         }
+        this.slideImage = document.getElementById('slide');
     },
 
     jump: function () {
@@ -27,7 +29,10 @@ player = {
         game.ctx.fillStyle = "#aaaaaa";
         game.ctx.fillRect(this.x, 0, 1, game.height);
         game.ctx.fillStyle = "#000000";
-        game.ctx.drawImage(this.images[Math.floor(this.mod / 3)], this.x - 80, y - 250);
+        if (this.sliding)
+            game.ctx.drawImage(this.slideImage, this.x - 100, y - 100);
+        else
+            game.ctx.drawImage(this.images[Math.floor(this.mod / 3)], this.x - 80, y - 250);
         //this.realCtx.drawImage(this.buffer, 0, 0);
     },
 

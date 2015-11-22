@@ -25,6 +25,8 @@ var game = {
     slideKeys: [16, 17],
     bg: null,
 
+    missY: 0,
+
     keymap: {},
 
     init: function() {
@@ -105,6 +107,14 @@ var game = {
                     if (!ev.done) {
                         this.score -= 5;
                         this.combo = 0;
+                        // this is a MISS
+                        var ny = 200 - this.missY;
+                        var t = this;
+                        if (this.missY == 0)
+                            setTimeout(function() {t.missY = 0;}, 600);
+                        t.missY += 50;
+                        this.objects.push(new Particle("misi", this.width >> 1, ny));
+                        this.updateScore();
                     }
                 }
             }
