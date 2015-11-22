@@ -301,9 +301,7 @@ var game = {
             }
             var level = this.objects[0];
             // TODO: snap
-            var time = this.music.getTime() - this.music.offset;
-            var bpm = this.objects[0].bpm;
-            time = Math.floor(time  / (bpm / 60 / 4)) * (bpm / 60 / 4) + this.music.offset;
+            var time = this.music.getTime();
             if (func == 'jump') {
                 this.generateObject("spike", time);
                 this.generateEvent("jump", time, false);
