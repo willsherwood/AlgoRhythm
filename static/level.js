@@ -46,14 +46,6 @@ Level.prototype.drawObject = function (o, x) {
 
 Level.prototype.draw = function () {
     var time = game.music.getTime();
-    for (var i = 0; i < this.objects.length; i++) {
-        var x = this.objects[i];
-        var xc = (x.time - time) * this.velocity + player.x;
-        // y = this.jumpFactor * -time * (time - this.jumpTime)
-        // where time is time after jump
-        // if time > this.jumpTime then stop jump
-        this.drawObject(x, xc);
-    }
     var flag = false;
     for (var i = 0; i < this.platforms.length; i++) {
         var x = this.platforms[i];
@@ -85,6 +77,14 @@ Level.prototype.draw = function () {
         }
     }
     player.draw(py);
+    for (var i = 0; i < this.objects.length; i++) {
+        var x = this.objects[i];
+        var xc = (x.time - time) * this.velocity + player.x;
+        // y = this.jumpFactor * -time * (time - this.jumpTime)
+        // where time is time after jump
+        // if time > this.jumpTime then stop jump
+        this.drawObject(x, xc);
+    }
 };
 
 function binarySearch(stuff, time) {
