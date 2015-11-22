@@ -248,7 +248,7 @@ var game = {
     },
 
     redraw: function() {
-        if (game.music.isPaused() && !window.editing && game.music.getTime() > 1) {
+        if (game.music.isPaused() && !this.queryString.editing && game.music.getTime() > 1) {
             var results = {
                 score: this.score,
                 accuracy: this.accuracy,
@@ -394,27 +394,6 @@ var game = {
                 else if (score == 5)
                     this.objects.push(new Particle("badi", game.width / 2, game.height / 2));
             }
-            this.music.el.addEventListener("ended", (function() {
-                var results = {
-                    score: this.score,
-                    accuracy: this.accuracy,
-                    maxCombo: this.combo > this.maxCombo ? this.combo : this.maxCombo,
-                    title: this.queryString.title,
-                    events: this.objects[0].events.length,
-                    bpm: this.queryString.bpm
-                };
-                var pairs = [];
-                for (var key in results)
-                    if (results.hasOwnProperty(key))
-                        pairs.push(encodeURIComponent(key) + "=" + encodeURIComponent(results[key]));
-                url = "results.html?" + pairs.join("&");
-                while (document.body.firstChild)
-                    document.body.removeChild(document.body.firstChild);
-                var link = document.createElement("a");
-                link.href = url;
-                link.textContent = "Click to see results";
-                document.body.appendChild(link);
-            }).bind(this));
             return false;
         } else if (window.editing && func) {
             if (player.jumping || player.sliding) {
