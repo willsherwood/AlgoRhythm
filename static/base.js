@@ -169,6 +169,7 @@ var game = {
                     a /= this.tempos.length * temp2 - temp1 * temp1;
                     document.getElementById('editbpm').value = 60 / a;
                     this.objects[0].bpm = 60/a;
+
                 }
                 this.tempoTap++;
             }).bind(this));
