@@ -1,5 +1,6 @@
 function Level(json) {
     this.objects = json.objects;
+    this.objects.forEach(function(o) {o.rand = Math.random();});
     this.events = json.events;
     this.velocity = json.velocity; // pixels/sec
     this.tolerance = json.tolerance;
@@ -32,9 +33,10 @@ Level.prototype.drawObject = function (o, x) {
     //TODO: fade out
     if (o.type == 'spike') {
         game.ctx.fillRect(x, 0, 1, game.height);
-        game.ctx.fillRect(x - 16 + this.velocity * (this.jumpTime / 2), player.y - 32, 32, 32);
-    }
-    else if (o.type == 'ceiling') {
+        var i = o.rand < 0.5 ? this.images.cone : this.images.pothole;
+        var cf = o.rand < 0.5 ? 80 : 30;
+        game.ctx.drawImage(i, x - (i.width >> 1) + this.velocity * (this.jumpTime / 2), player.y - (i.height >> 1) - cf);
+    } else if (o.type == 'ceiling') {
         game.ctx.fillRect(x, 0, 1, game.height);
         game.ctx.fillRect(x + this.velocity * (this.tolerance * 0.5), 0, (this.jumpTime - this.tolerance) * this.velocity, game.height - 160);
     } else if (o.type == 'red') {
