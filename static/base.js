@@ -21,11 +21,6 @@ var game = {
 
     objects: [],
 
-    grid: [[0, 0, 0, 0, 0, 0, 0, 0],
-           [0, 0, 1, 1, 1, 0, 0, 0],
-           [0, 0, 0, 0, 0, 0, 0, 0],
-           [1, 1, 1, 1, 1, 1, 1, 1]],
-
     attackLKeys: [81, 87, 69, 82, 84, 65, 83, 68, 70, 71, 90, 88, 67, 86],
     attackRKeys: [89, 85, 73, 79, 80, 91, 123, 93, 125, 92, 124, 72, 74, 75, 76, 59, 58, 39, 34, 66, 78, 77, 44, 60, 46, 62, 47, 63],
     jumpKeys: [32],
@@ -46,11 +41,11 @@ var game = {
         this.controller.init(game.canvas);
 
         this.music = new Music();
-        this.music.init("test.mp3", (function() {
+        this.controller.keyPressed = this.keyPressed.bind(this);
+
+        this.music.init("../res/Music/dancedance.mp3", (function() {
             this.music.play();
         }).bind(this));
-
-        this.controller.keyPressed = this.keyPressed.bind(this);
         var a = new XMLHttpRequest();
         a.onreadystatechange = (function() {
             if (a.readyState == 4 && a.status == 200) {
@@ -62,20 +57,8 @@ var game = {
         a.send();
     },
 
-    drawGrid: function() {
-        for (var y = 0; y < this.grid.length; y++) {
-            for (var x = 0; x < this.grid[0].length; x++) {
-                var tile = this.grid[y][x];
-                if (tile) {
-                    this.ctx.fillRect(x * 32, y * 32, 32, 32);
-                }
-            }
-        }
-    },
-
     redraw: function() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.drawGrid();
         for (var i = 0; i < this.objects.length; i++)
             this.objects[i].draw(this.ctx);
         this.controller.updateGamepads();

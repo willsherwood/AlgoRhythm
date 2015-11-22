@@ -43,7 +43,7 @@ Controller.prototype.gpConnect = function(e) {
     this.gamepad = e.gamepad;
     this.gamepadKeys = new Array(this.gamepad.buttons.length);
     for (var i=0; i<this.gamepad.buttons.length; i+=1)
-        this.gamepadKeys[i] = String.fromCharCode('a'.charCodeAt(0) + i);
+        this.gamepadKeys[i] = ('A game pad thing'.charCodeAt(0) + i);
     this.gamepadPressed = new Array(this.gamepad.buttons.length);
     this.stopScan(true);
 };
@@ -85,11 +85,12 @@ Controller.prototype.updateGamepads = function() {
             pressed = button.pressed;
         else
             pressed = button == 1.0;
-        if ((!pressed != !this.gamepadPressed[i]) && this.gamepadKeys[i])
+        if ((!pressed != !this.gamepadPressed[i]) && this.gamepadKeys[i]) {
             if (pressed)
-                this.handleKeyDown({key: this.gamepadKeys[i]});
+                this.handleKeyDown({which: this.gamepadKeys[i], preventDefault: function(){}});
             else
-                this.handleKeyUp({key: this.gamepadKeys[i]});
+                this.handleKeyUp({which: this.gamepadKeys[i], preventDefault: function(){}});
+        }
         this.gamepadPressed[i] = pressed;
     }
 };

@@ -22,7 +22,12 @@ Level.prototype.drawObject = function (o, x) {
     // x is the x coordinate//
 
     //TODO: fade out
-    game.ctx.fillRect(x - 16, player.y - 32, 32, 32);
+    if (o.type == 'spike') {
+        game.ctx.fillRect(x, 0, 1, game.height);
+        game.ctx.fillRect(x - 16 + this.velocity * (this.jumpTime / 2), player.y - 32, 32, 32);
+    }
+    else
+        game.ctx.fillRect(x - 16, player.y - 32, 32, 32);
 };
 
 Level.prototype.draw = function () {
