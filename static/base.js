@@ -23,6 +23,7 @@ var game = {
     attackRKeys: [89, 85, 73, 79, 80, 91, 123, 93, 125, 92, 124, 72, 74, 75, 76, 59, 58, 39, 34, 66, 78, 77, 44, 60, 46, 62, 47, 63],
     jumpKeys: [32],
     slideKeys: [16, 17],
+    bg: null,
 
     keymap: {},
 
@@ -81,7 +82,8 @@ var game = {
     },
 
     redraw: function() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        //this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.bg.draw();
         for (var i = this.objects.length - 1; i >= 0; i--) {
             this.objects[i].draw(this.ctx);
             if (this.objects[i].dead)
@@ -115,6 +117,8 @@ var game = {
         if (!this.running) {
             this.running = true;
             player.init();
+            this.bg = new Background();
+            this.bg.init();
             this.updateRunningText();
             this.redraw();
         }
@@ -238,10 +242,10 @@ window.trigger = function() {
         window.keyboardLog.forEach(writeMessage);
         window.keyboardLog = null;
     }
-    if (domReady && window.playerModuleLoaded && window.keyboardModuleLoaded && window.musicModuleLoaded && window.levelModuleLoaded && window.playerModuleLoaded) {
+    if (domReady && window.playerModuleLoaded && window.keyboardModuleLoaded && window.musicModuleLoaded && window.levelModuleLoaded && window.playerModuleLoaded && window.backgroundModuleLoaded) {
         start();
     }
-}
+};
 
 window.addEventListener("DOMContentLoaded", window.trigger);
 
