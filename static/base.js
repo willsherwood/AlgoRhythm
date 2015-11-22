@@ -158,7 +158,11 @@ var game = {
             var level = this.objects[0];
             var wi = this.currentEvent;
             if (!level.events[wi]) return false;
-            var wm = Math.abs(level.events[wi].time - time);
+            var wm;
+            if (level.events[ii].type != func)
+                wm = Infinity;
+            else
+                wm = Math.abs(level.events[wi].time - time);
             var ii = this.currentEvent + 1;
             while (level.events[ii] && time >= level.events[ii].time - level.tolerance) {
                 var dist = Math.abs(level.events[ii].time - time);
