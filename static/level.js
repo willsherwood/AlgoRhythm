@@ -40,13 +40,16 @@ Level.prototype.draw = function () {
         // if time > this.jumpTime then stop jump
         this.drawObject(x, xc);
     }
+    var flag = false;
     for (var i = 0; i < this.platforms.length; i++) {
         var x = this.platforms[i];
         var sx = (x.start - time) * this.velocity + player.x;
         var ex = (x.end - time) * this.velocity + player.x;
         game.ctx.fillRect(sx, player.y, ex - sx, game.height - player.y);
+        if (player.x >= sx && player.x <= ex) flag = true;
     }
-
+    if (!(flag || player.jumping))
+        console.log("You died");
     var py = player.y;
     if (player.jumping) {
         var t = time - player.jumpTime;
@@ -57,6 +60,7 @@ Level.prototype.draw = function () {
             py = y + player.y;
     }
     player.draw(py);
+
 };
 
 
