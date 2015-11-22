@@ -62,13 +62,13 @@ var game = {
             this.music.play();
         }).bind(this));
         this.redSound = new Music();
-        this.redSound.init("../res/red.wav", undefined, true);
+        this.redSound.init("../res/Audio/red.ogg", undefined, true);
         this.blueSound = new Music();
-        this.blueSound.init("../res/blue.wav", undefined, true);
+        this.blueSound.init("../res/Audio/blue.ogg", undefined, true);
         this.jumpSound = new Music();
-        this.jumpSound.init("../res/jump.wav", undefined, true);
+        this.jumpSound.init("../res/Audio/jump.ogg", undefined, true);
         this.failSound = new Music();
-        this.failSound.init("../res/fail.wav", undefined, true);
+        this.failSound.init("../res/Audio/fail.ogg", undefined, true);
 
         var a = new XMLHttpRequest();
         a.onreadystatechange = (function() {
