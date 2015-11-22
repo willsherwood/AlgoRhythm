@@ -87,6 +87,7 @@ Level.prototype.drawObject = function (o, x) {
 Level.prototype.draw = function () {
     var time = game.music.getTime();
     var flag = false;
+    /*
     for (var i = 0; i < this.platforms.length; i++) {
         var x = this.platforms[i];
         var sx = (x.start - time) * this.velocity + player.x;
@@ -98,6 +99,7 @@ Level.prototype.draw = function () {
         game.ctx.fillRect(sx, player.y, ex - sx, game.height - player.y);
         if (time >= x.start - this.tolerance && time <= x.end + this.tolerance) flag = true;
     }
+    */
     if (!(flag || player.jumping))
         console.log("You died");
     var py = player.y;
