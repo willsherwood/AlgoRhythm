@@ -140,7 +140,6 @@ var game = {
             panel.appendChild(this.createParameter("jumpTime", "Jump Time (seconds)"));
             panel.appendChild(this.createParameter("jumpHeight", "Jump Height (pixels)"));
             panel.appendChild(this.createParameter("bpm", "Beats per Minute"));
-
             var tempo = document.createElement("button");
             tempo.id = "tempo";
             tempo.textContent = "Tap for tempo";
@@ -170,7 +169,6 @@ var game = {
                     a /= this.tempos.length * temp2 - temp1 * temp1;
                     document.getElementById('editbpm').value = 60 / a;
                     this.objects[0].bpm = 60/a;
-                    this.objects[0].offset = null;
                 }
                 this.tempoTap++;
             }).bind(this));
