@@ -66,7 +66,6 @@ Background.prototype.draw = function () {
         if (q.current < -200) continue;
         game.ctx.drawImage(q.img, q.current, this.groundY - q.img.height);
     }
-    game.ctx.drawImage(this.fore[0], this.mod / 0.47 - 100, this.groundY - this.fore[0].height);
 };
 
 
