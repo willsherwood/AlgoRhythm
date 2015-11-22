@@ -82,6 +82,7 @@ var game = {
             if (a.readyState == 4 && a.status == 200) {
                 var json = JSON.parse(a.responseText);
                 this.objects.push(new Level(json));
+                this.objects[0].init();
             }
         }).bind(this);
         a.open("GET", "samplelevel.json", true);

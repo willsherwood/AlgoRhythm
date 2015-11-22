@@ -15,7 +15,14 @@ function Level(json) {
         land = e.time + this.jumpTime;
     }
     this.platforms.push({start: land, end: Infinity});
+    this.images = {cone: null, pothole: null};
 }
+
+Level.prototype.init = function() {
+    // load images
+    this.images.cone = document.getElementById("cone");
+    this.images.pothole = document.getElementById("pothole");
+};
 
 Level.prototype.drawObject = function (o, x) {
     // o is the object to be drawn
