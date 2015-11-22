@@ -46,6 +46,10 @@ Music.prototype.play = function() {
         this.el.play();
 };
 
+Music.prototype.stop = function() {
+    this.el.pause();
+}
+
 Music.prototype.getTime = function() {
     return this.el.currentTime;
 };

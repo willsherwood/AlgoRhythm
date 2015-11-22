@@ -1,3 +1,20 @@
+function parseQueryString(str) {
+    var vars = str.split('&');
+    var ret = {};
+    for (var i = 0; i < vars.length; i++) {
+        var v = vars[i];
+        var ei = v.indexOf('=');
+        if (ei == -1) {
+            ret[decodeURIComponent(v)] = true;
+            continue;
+        }
+        var key = decodeURIComponent(v.substring(0, ei));
+        var val = decodeURIComponent(v.substring(ei + 1));
+        ret[key] = val;
+    }
+    return ret;
+}
+
 var game = {
     width: 1024,
     height: 576,
@@ -16,6 +33,8 @@ var game = {
     redSound: null,
     blueSound: null,
     jumpSound: null,
+
+    queryString: parseQueryString(window.location.search.substring(1)),
 
     objects: [],
 
@@ -65,8 +84,9 @@ var game = {
         this.controller.keyPressed = this.keyPressed.bind(this);
 
         this.music = new Music();
-        this.music.init("../res/Music/hard.ogg", (function() {
-            this.music.play();
+        this.music.init("../levels/" + this.queryString.music, (function() {
+            window.musicLoaded = true;
+            window.triggerLoad();
         }).bind(this));
         this.redSound = new Music();
         this.redSound.init("../res/Audio/red.ogg", undefined, true);
@@ -85,7 +105,7 @@ var game = {
                 this.objects[0].init();
             }
         }).bind(this);
-        a.open("GET", "hard.json", true);
+        a.open("GET", "../levels/" + this.queryString.json, true);
         a.send();
     },
 
@@ -282,6 +302,8 @@ function writeMessage(m) {
 }
 
 window.domReady = false;
+window.allLoaded = false;
+window.musicLoaded = false;
 
 window.trigger = function() {
     if (window.keyboardLog) {
@@ -293,7 +315,16 @@ window.trigger = function() {
     }
 };
 
+function triggerLoad() {
+    if (window.allLoaded && window.musicLoaded)
+        game.music.play();
+};
+
 window.addEventListener("DOMContentLoaded", window.trigger);
+window.addEventListener("load", function() {
+    window.allLoaded = true;
+    triggerLoad();
+});
 
 window.setTimeout(function() {
     if (!game.running) writeMessage("Warning: all modules not loaded");

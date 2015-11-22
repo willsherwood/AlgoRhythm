@@ -1,0 +1,14 @@
+[
+    {
+        "title": "Tutorial",
+        "bpm": 60,
+        "json": "samplelevel.json",
+        "music": "dancedance.mp3"
+    },
+    {
+        "title": "Insane",
+        "bpm": 386,
+        "json": "hard.json",
+        "music": "hard.ogg"
+    }
+]
