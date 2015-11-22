@@ -45,8 +45,9 @@ var game = {
     bg: null,
     tempoTap: 0,
     tempos: [],
-
+    tempoTimeout: null,
     missY: 0,
+
 
     keymap: {},
 
@@ -144,9 +145,11 @@ var game = {
             tempo.id = "tempo";
             tempo.textContent = "Tap for tempo";
             tempo.addEventListener("click", (function() {
-                if (this.tempoTap == 0)
+                if (this.tempoTap == 0) {
+                    this.stop();
                     this.music.play();
-                else {
+                } else {
+                    if (this.tempoTimeout) window.clearTimeout(tempoTimeout);
                     this.tempos.push(this.music.getTime());
                     var a = 0;
                     for (var i=0; i<this.tempos.length; i++) {
@@ -169,7 +172,10 @@ var game = {
                     a /= this.tempos.length * temp2 - temp1 * temp1;
                     document.getElementById('editbpm').value = 60 / a;
                     this.objects[0].bpm = 60/a;
-
+                    setTimeout((function() {
+                        this.restart();
+                        this.music.stop();
+                    }).bind(this), 2000);
                 }
                 this.tempoTap++;
             }).bind(this));

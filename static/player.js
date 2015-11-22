@@ -24,7 +24,8 @@ player = {
     },
 
     draw: function (y) {
-        this.mod = (this.mod+1) % 24;
+        if (!game.music.isPaused())
+            this.mod = (this.mod+1) % 24;
         //game.ctx.fillRect(this.x - 40, y - 130 - (this.sliding? (-130+40) : 0), 80, this.sliding ? 40:130);
         game.ctx.fillStyle = "#aaaaaa";
         game.ctx.fillRect(this.x, 0, 1, game.height);
