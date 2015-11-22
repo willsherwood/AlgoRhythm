@@ -26,15 +26,17 @@ player = {
     draw: function (y) {
         if (!game.music.isPaused())
             this.mod = (this.mod+1) % 24;
-        //game.ctx.fillRect(this.x - 40, y - 130 - (this.sliding? (-130+40) : 0), 80, this.sliding ? 40:130);
-        game.ctx.fillStyle = "#aaaaaa";
-        game.ctx.fillRect(this.x, 0, 1, game.height);
-        game.ctx.fillStyle = "#000000";
         if (this.sliding)
             game.ctx.drawImage(this.slideImage, this.x - 100, y - 100);
         else
             game.ctx.drawImage(this.images[Math.floor(this.mod / 3)], this.x - 80, y - 250);
         //this.realCtx.drawImage(this.buffer, 0, 0);
+        game.ctx.beginPath();
+        game.ctx.fillStyle = "#eeee99";
+        game.ctx.arc(player.x, player.y - 64, 7, 0, Math.PI * Math.sqrt(2) * Math.sqrt(2));
+        game.ctx.fill();
+        game.ctx.fillStyle = "#000000";
+
     },
 
     slide: function () {

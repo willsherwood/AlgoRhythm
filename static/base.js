@@ -282,6 +282,7 @@ var game = {
     start: function() {
         if (!this.running) {
             this.running = true;
+            this.canvas.focus();
             player.init();
             this.bg = new Background();
             this.bg.init();
