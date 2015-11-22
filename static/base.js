@@ -160,7 +160,7 @@ var game = {
             if (!level.events[wi]) return false;
             var wm;
             if (level.events[ii].type != func)
-                wm = Infinity;
+                wm = -Infinity;
             else
                 wm = Math.abs(level.events[wi].time - time);
             var ii = this.currentEvent + 1;
