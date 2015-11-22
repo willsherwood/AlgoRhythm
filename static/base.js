@@ -243,6 +243,27 @@ var game = {
     },
 
     redraw: function() {
+        if (game.music.isPaused() && !window.editing && game.music.getTime() > 1) {
+            var results = {
+                score: this.score,
+                accuracy: this.accuracy,
+                maxCombo: this.combo > this.maxCombo ? this.combo : this.maxCombo,
+                title: this.queryString.title,
+                events: this.objects[0].events.length,
+                bpm: this.queryString.bpm
+            };
+            var pairs = [];
+            for (var key in results)
+                if (results.hasOwnProperty(key))
+                    pairs.push(encodeURIComponent(key) + "=" + encodeURIComponent(results[key]));
+            url = "results.html?" + pairs.join("&");
+            while (document.body.firstChild)
+                document.body.removeChild(document.body.firstChild);
+            var link = document.createElement("a");
+            link.href = url;
+            link.textContent = "Click to see results";
+            document.body.appendChild(link);
+        }
         //this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.controller.updateGamepads();
         this.bg.draw();

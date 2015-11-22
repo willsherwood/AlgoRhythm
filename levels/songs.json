@@ -6,6 +6,12 @@
         "music": "dancedance.mp3"
     },
     {
+        "title": "Boss Fight",
+        "bpm": 133,
+        "json": "boss.json",
+        "music": "boss.ogg"
+    },
+    {
         "title": "Insane",
         "bpm": 386,
         "json": "hard.json",
