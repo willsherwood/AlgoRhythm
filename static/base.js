@@ -151,6 +151,26 @@ var game = {
             panel.appendChild(this.createParameter("jumpTime", "Jump Time (seconds)"));
             panel.appendChild(this.createParameter("jumpHeight", "Jump Height (pixels)"));
             panel.appendChild(this.createParameter("bpm", "Beats per Minute"));
+            var exbutton  = document.createElement("button");
+            exbutton.id = "exbutton";
+            exbutton.textContent = "Export";
+            exbutton.addEventListener("click", (function() {
+                // reset all dones and deads
+                var level = this.objects[0];
+                level.events.forEach(function(e) {delete e.done;});
+                level.objects.forEach(function(e) {delete e.dead;delete e.rand;});
+                delete level.images;
+                delete level.jumpFactor;
+                delete level.platforms;
+                var out = JSON.stringify(level);
+                while (document.body.firstChild) {
+                    document.body.removeChild(document.body.firstChild);
+                }
+                this.running = false;
+                var pre = document.createElement("pre");
+                pre.textContent = out;
+                document.body.appendChild(pre);
+            }).bind(this));
             var tempo = document.createElement("button");
             tempo.id = "tempo";
             tempo.textContent = "Tap for tempo";
