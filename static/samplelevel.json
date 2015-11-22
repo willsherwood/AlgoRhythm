@@ -1,0 +1,16 @@
+{
+	"velocity": 600,
+    "jumpTime": 1,
+    "jumpHeight": 100,
+	"objects": [
+		{"type": "spike", "time": 5},
+		{"type": "enemyGroundL", "time": 9},
+		{"type": "ceiling", "time": 11}
+	],
+	"events": [
+		{"type": "jump", "ground": false, "time": 5},
+		{"type": "jump", "ground": true, "time": 8},
+		{"type": "attackL", "time": 9},
+		{"type": "slide", "time": 11}
+	]
+}

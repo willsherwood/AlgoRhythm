@@ -124,6 +124,8 @@ var game = {
 
     jump: function() {
         console.log("Jumping");
+        if (!player.jumping)
+            player.jump();
     },
 
     slide: function() {
@@ -158,7 +160,7 @@ window.trigger = function() {
         window.keyboardLog.forEach(writeMessage);
         window.keyboardLog = null;
     }
-    if (domReady && window.playerModuleLoaded && window.keyboardModuleLoaded && window.musicModuleLoaded && window.levelModuleLoaded) {
+    if (domReady && window.playerModuleLoaded && window.keyboardModuleLoaded && window.musicModuleLoaded && window.levelModuleLoaded && window.playerModuleLoaded) {
         start();
     }
 }

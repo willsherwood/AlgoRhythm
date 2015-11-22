@@ -14,29 +14,45 @@ function Level(json) {
         land = e.time + this.jumpTime;
     }
     this.platforms.push({start: land, end: land + 500});
-    this.playerX = 80;
 }
 
-Level.prototype.drawObject = function(o, x) {
+Level.prototype.drawObject = function (o, x) {
     // o is the object to be drawn
     // o.type is a string
-    // x is the x coordinate
-    game.ctx.fillRect(x - 16, 576-100, 32, 32);
+    // x is the x coordinate//
+
+    //TODO: fade out
+    game.ctx.fillRect(x - 16, player.y - 32, 32, 32);
 };
 
 Level.prototype.draw = function () {
     var time = game.music.getTime();
-    for (var i=0; i<this.objects.length; i++) {
+    for (var i = 0; i < this.objects.length; i++) {
         var x = this.objects[i];
-        var xc = (x.time - time) * this.velocity + this.playerX;
+        var xc = (x.time - time) * this.velocity + player.x;
         // y = this.jumpFactor * -time * (time - this.jumpTime)
         // where time is time after jump
         // if time > this.jumpTime then stop jump
         this.drawObject(x, xc);
     }
+    for (var i = 0; i < this.platforms.length; i++) {
+        var x = this.platforms[i];
+        var sx = (x.start - time) * this.velocity + player.x;
+        var ex = (x.end - time) * this.velocity + player.x;
+        game.ctx.fillRect(sx, player.y, ex - sx, game.height - player.y);
+    }
+
+    var py = player.y;
+    if (player.jumping) {
+        var t = time - player.jumpTime;
+        var y = this.jumpFactor * t * (t - this.jumpTime);
+        if (y > 0) {
+            player.jumping = false;
+        } else
+            py = y + player.y;
+    }
+    player.draw(py);
 };
-
-
 
 
 window.levelModuleLoaded = true;
