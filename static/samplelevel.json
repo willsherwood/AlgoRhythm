@@ -1,5 +1,5 @@
 {
-    "velocity": 1500,
+    "velocity": 500,
     "jumpTime": 0.3,
     "jumpHeight": 80,
     "tolerance": 0.1,

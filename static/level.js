@@ -29,7 +29,7 @@ Level.prototype.drawObject = function (o, x) {
     }
     else if (o.type == 'ceiling') {
         game.ctx.fillRect(x, 0, 1, game.height);
-        game.ctx.fillRect(x + 32, 0, this.jumpTime * this.velocity - 5, game.height - 160);
+        game.ctx.fillRect(x + this.velocity * (this.tolerance * 0.5), 0, (this.jumpTime - this.tolerance) * this.velocity, game.height - 160);
     } else if (o.type == 'red') {
         if (o.dead) return;
         game.ctx.fillStyle = "#FF0000";

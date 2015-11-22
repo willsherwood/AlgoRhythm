@@ -3,8 +3,17 @@
 <head>
     <title>Game</title>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <style type="text/css">
+        .invisible {
+            display: none;
+        }
+    </style>
 </head>
 <body>
+<div class="invisible">
+    <img src="../res/Effects/GlowR.png" type="image/png" alt="Red Glow" id="rgi"/>
+    <img src="../res/Effects/GlowB.png" type="image/png" alt="Blue Glow" id="bgi"/>
+</div>
 <script type="text/javascript" src="keyboard.js">
 </script>
 <script type="text/javascript" src="player.js">
@@ -14,6 +23,8 @@
 <script type="text/javascript" src="base.js">
 </script>
 <script type="text/javascript" src="level.js">
+</script>
+<script type="text/javascript" src="particle.js">
 </script>
 <div id="devtools">
     <div id="status">

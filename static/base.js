@@ -63,8 +63,11 @@ var game = {
 
     redraw: function() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        for (var i = 0; i < this.objects.length; i++)
+        for (var i = this.objects.length - 1; i >= 0; i--) {
             this.objects[i].draw(this.ctx);
+            if (this.objects[i].dead)
+                this.objects.splice(i, 1);
+        }
         this.realCtx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.realCtx.drawImage(this.buffer, 0, 0);
         this.controller.updateGamepads();
@@ -110,6 +113,7 @@ var game = {
         if (this.objects[0].objects[ce[0]].type != 'red') return;
         if (ce[1] < this.objects[0].tolerance) {
             this.objects[0].objects[ce[0]].dead = true;
+            this.objects.push(new Particle("rgi"));
             console.log("Success");
         }
     },
@@ -121,6 +125,7 @@ var game = {
         if (this.objects[0].objects[ce[0]].type != 'blue') return;
         if (ce[1] < this.objects[0].tolerance) {
             this.objects[0].objects[ce[0]].dead = true;
+            this.objects.push(new Particle("bgi"));
             console.log("Success");
         }
     },
