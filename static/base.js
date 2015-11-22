@@ -300,8 +300,16 @@ var game = {
                 }
             }
             var level = this.objects[0];
-            // TODO: snap
             var time = this.music.getTime();
+            var ii = binarySearch(level.events, time);
+            if (ii < 0) ii = (~ii) - 1;
+            var snapdivisions = 4;
+            if (level.events[ii]) {
+                var delay = time - level.events[ii].time;
+                if (delay * level.bpm / 60 * 4 < 0.75)
+                    snapdivisions = 8;
+            }
+            time = Math.round(time * level.bpm / 60 * snapdivisions) * 60 / level.bpm / snapdivisions;
             if (func == 'jump') {
                 this.generateObject("spike", time);
                 this.generateEvent("jump", time, false);
