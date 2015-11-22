@@ -1,16 +1,10 @@
-function createCanvas(width, height) {
-    var canv = document.createElement("canvas");
-    canv.width = width;
-    canv.height = height;
-    canv.tabIndex = 0;
-    canv.style.outline = "none";
-    document.body.appendChild(canv);
-    return canv;
-}
-
 var game = {
     width: 1024,
     height: 576,
+
+    score: 0,
+    currentEvent: 0,
+    combo: 0,
 
     running: false,
 
@@ -34,17 +28,30 @@ var game = {
     keymap: {},
 
     init: function() {
-        this.attackLKeys.forEach(function(k) {this.keymap[k] = this.attackL.bind(this);}, this);
-        this.attackRKeys.forEach(function(k) {this.keymap[k] = this.attackR.bind(this);}, this);
-        this.jumpKeys.forEach(function(k) {this.keymap[k] = this.jump.bind(this);}, this);
-        this.slideKeys.forEach(function(k) {this.keymap[k] = this.slide.bind(this);}, this);
+        this.attackLKeys.forEach(function(k) {this.keymap[k] = 'attackL';}, this);
+        this.attackRKeys.forEach(function(k) {this.keymap[k] = 'attackR';}, this);
+        this.jumpKeys.forEach(function(k) {this.keymap[k] = 'jump';}, this);
+        this.slideKeys.forEach(function(k) {this.keymap[k] = 'slide';}, this);
 
-        this.canvas = createCanvas(this.width, this.height);
+        var container = document.createElement("div");
+        container.id = "gamearea";
+        document.body.appendChild(container);
+        this.canvas = document.createElement("canvas");
+        this.canvas.width = this.width;
+        this.canvas.height = this.height;
+        this.canvas.tabIndex = 0;
+        this.canvas.style.outline = "none";
+        container.appendChild(this.canvas);
         this.realCtx = this.canvas.getContext("2d");
         this.buffer = document.createElement("canvas");
         this.buffer.width = this.width;
         this.buffer.height = this.height;
         this.ctx = this.buffer.getContext("2d");
+        this.scoreText = document.createElement("p");
+        this.scoreText.id = "scoretext";
+        container.appendChild(this.scoreText);
+        this.comboText = document.createElement("p");
+        container.appendChild(this.comboText);
 
         this.controller = new Controller();
         this.controller.init(game.canvas);
@@ -85,6 +92,18 @@ var game = {
         this.realCtx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.realCtx.drawImage(this.buffer, 0, 0);
         this.controller.updateGamepads();
+        if (this.objects.length > 0) {
+            if (this.currentEvent < this.objects[0].events.length) {
+                var ev = this.objects[0].events[this.currentEvent];
+                if (this.music.getTime() > ev.time + this.objects[0].tolerance) {
+                    this.currentEvent++;
+                    if (!ev.done) {
+                        this.score -= 5;
+                        this.combo = 0;
+                    }
+                }
+            }
+        }
         if (this.running)
             window.requestAnimationFrame(this.redraw.bind(this));
     },
@@ -118,7 +137,27 @@ var game = {
     keyPressed: function(e) {
         func = this.keymap[e];
         if (func) {
-            func();
+            this[func]();
+            var time = this.music.getTime();
+            var level = this.objects[0];
+            var wi = this.currentEvent;
+            if (!level.events[wi]) return false;
+            var wm = Math.abs(level.events[wi].time - time);
+            var ii = this.currentEvent + 1;
+            while (level.events[ii] && time >= level.events[ii].time - level.tolerance) {
+                var dist = Math.abs(level.events[ii].time - time);
+                if (dist < wm && level.events[ii].type == func) {
+                    wm = dist;
+                    wi = ii;
+                }
+                ii++;
+            }
+            if (wm <= level.tolerance) {
+                this.combo++;
+                this.score += this.computeScore(wm);
+                this.updateScore();
+                level.events[wi].done = true;
+            }
             return false;
         } else return true;
     },
@@ -160,6 +199,19 @@ var game = {
             player.slide();
         else this.failSound.play();
         console.log("Sliding");
+    },
+
+    computeScore: function(dt) {
+        var tol = this.objects[0].tolerance;
+        if (dt < tol / 10) return 30;
+        if (dt < tol / 5) return 20;
+        if (dt < tol / 2) return 10;
+        return 5;
+    },
+
+    updateScore: function() {
+        this.scoreText.textContent = "Score: " + this.score;
+        this.comboText.textContent = this.combo + " combo";
     }
 };
 
