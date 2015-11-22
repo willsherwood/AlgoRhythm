@@ -255,7 +255,7 @@ var game = {
                     if (this.music.getTime() > ev.time + this.objects[0].tolerance) {
                         this.currentEvent++;
                         if (!ev.done) {
-                            this.score -= 5;
+                            this.score -= 25;
                             this.combo = 0;
                             // this is a MISS
                             var ny = 200 - this.missY;
