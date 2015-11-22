@@ -373,6 +373,7 @@ var game = {
             } else if (func == 'slide') {
                 this.generateObject("ceiling", time);
                 this.generateEvent("slide", time);
+                player.slide();
             } else {
                 alert("Unknown function " + func);
             }
@@ -471,6 +472,9 @@ function start() {
     var gpbutton = document.getElementById("gpbutton");
     if (gpbutton)
         gpbutton.addEventListener("click", game.controller.startScan.bind(game.controller));
+    // scan for gamepads?
+    var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+    if (isChrome) game.controller.startScan();
     game.start();
 }
 
