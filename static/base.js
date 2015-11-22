@@ -19,12 +19,17 @@ var game = {
 
     controller: null,
 
+    redSound: null,
+    blueSound: null,
+    jumpSound: null,
+
     objects: [],
 
     attackLKeys: [81, 87, 69, 82, 84, 65, 83, 68, 70, 71, 90, 88, 67, 86],
     attackRKeys: [89, 85, 73, 79, 80, 91, 123, 93, 125, 92, 124, 72, 74, 75, 76, 59, 58, 39, 34, 66, 78, 77, 44, 60, 46, 62, 47, 63],
     jumpKeys: [32],
     slideKeys: [16, 17],
+    bg: null,
 
     keymap: {},
 
@@ -43,13 +48,21 @@ var game = {
 
         this.controller = new Controller();
         this.controller.init(game.canvas);
-
-        this.music = new Music();
         this.controller.keyPressed = this.keyPressed.bind(this);
 
+        this.music = new Music();
         this.music.init("../res/Music/dancedance.mp3", (function() {
             this.music.play();
         }).bind(this));
+        this.redSound = new Music();
+        this.redSound.init("../res/red.wav");
+        this.blueSound = new Music();
+        this.blueSound.init("../res/blue.wav");
+        this.jumpSound = new Music();
+        this.jumpSound.init("../res/jump.wav");
+        this.failSound = new Music();
+        this.failSound.init("../res/fail.wav");
+
         var a = new XMLHttpRequest();
         a.onreadystatechange = (function() {
             if (a.readyState == 4 && a.status == 200) {
@@ -62,7 +75,8 @@ var game = {
     },
 
     redraw: function() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        //this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.bg.draw();
         for (var i = this.objects.length - 1; i >= 0; i--) {
             this.objects[i].draw(this.ctx);
             if (this.objects[i].dead)
@@ -83,6 +97,9 @@ var game = {
     start: function() {
         if (!this.running) {
             this.running = true;
+            player.init();
+            this.bg = new Background();
+            this.bg.init();
             this.updateRunningText();
             this.redraw();
         }
@@ -114,8 +131,8 @@ var game = {
         if (ce[1] < this.objects[0].tolerance) {
             this.objects[0].objects[ce[0]].dead = true;
             this.objects.push(new Particle("rgi"));
-            console.log("Success");
-        }
+            this.redSound.play();
+        } else this.failSound.play();
     },
 
     attackR: function() {
@@ -126,19 +143,22 @@ var game = {
         if (ce[1] < this.objects[0].tolerance) {
             this.objects[0].objects[ce[0]].dead = true;
             this.objects.push(new Particle("bgi"));
-            console.log("Success");
-        }
+            this.blueSound.play();
+        } else this.failSound.play();
     },
 
     jump: function() {
         console.log("Jumping");
-        if (!player.jumping)
+        if (!player.jumping) {
             player.jump();
+            this.jumpSound.play();
+        } else this.failSound.play();
     },
 
     slide: function() {
         if (!player.sliding)
             player.slide();
+        else this.failSound.play();
         console.log("Sliding");
     }
 };
@@ -170,10 +190,10 @@ window.trigger = function() {
         window.keyboardLog.forEach(writeMessage);
         window.keyboardLog = null;
     }
-    if (domReady && window.playerModuleLoaded && window.keyboardModuleLoaded && window.musicModuleLoaded && window.levelModuleLoaded && window.playerModuleLoaded) {
+    if (domReady && window.playerModuleLoaded && window.keyboardModuleLoaded && window.musicModuleLoaded && window.levelModuleLoaded && window.playerModuleLoaded && window.backgroundModuleLoaded) {
         start();
     }
-}
+};
 
 window.addEventListener("DOMContentLoaded", window.trigger);
 
