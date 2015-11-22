@@ -1,22 +1,27 @@
 {
     "velocity": 500,
-    "jumpTime": 0.3,
-    "jumpHeight": 80,
+    "jumpTime": 0.4,
+    "jumpHeight": 160,
     "tolerance": 0.1,
-	"objects": [
-		{"type": "spike", "time": 5},
-		{"type": "red", "time": 9},
-	    {"type": "blue", "time": 9.5},
-		{"type": "red", "time": 10},
-		{"type": "blue", "time": 10.25},
-		{"type": "red", "time": 10.5},
-		{"type": "blue", "time": 11},
-		{"type": "ceiling", "time": 11}
-	],
-	"events": [
-		{"type": "jump", "ground": false, "time": 5},
-		{"type": "jump", "ground": true, "time": 8},
-		{"type": "attackL", "time": 9},
-		{"type": "slide", "time": 11}
-	]
+    "objects": [
+        {"type": "spike", "time": 5},
+        {"type": "red", "time": 9},
+        {"type": "blue", "time": 9.5},
+        {"type": "red", "time": 10},
+        {"type": "blue", "time": 10.25},
+        {"type": "red", "time": 10.5},
+        {"type": "blue", "time": 11},
+        {"type": "ceiling", "time": 11}
+    ],
+    "events": [
+        {"type": "jump", "ground": false, "time": 5},
+        {"type": "jump", "ground": true, "time": 8},
+        {"type": "attackL", "time": 9},
+        {"type": "attackR", "time": 9.5},
+        {"type": "attackL", "time": 10},
+        {"type": "attackR", "time": 10.25},
+        {"type": "attackL", "time": 10.5},
+        {"type": "attackR", "time": 11},
+        {"type": "slide", "time": 11}
+    ]
 }
