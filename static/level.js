@@ -13,7 +13,7 @@ function Level(json) {
         this.platforms.push({start: land, end: e.time});
         land = e.time + this.jumpTime;
     }
-    this.platforms.push({start: land, end: land + 500});
+    this.platforms.push({start: land, end: Infinity});
 }
 
 Level.prototype.drawObject = function (o, x) {
@@ -44,7 +44,11 @@ Level.prototype.draw = function () {
     for (var i = 0; i < this.platforms.length; i++) {
         var x = this.platforms[i];
         var sx = (x.start - time) * this.velocity + player.x;
+        if (sx < 0) sx = 0;
+        if (sx > game.width) continue;
         var ex = (x.end - time) * this.velocity + player.x;
+        if (ex < 0) continue;
+        if (ex > game.width) ex = game.width;
         game.ctx.fillRect(sx, player.y, ex - sx, game.height - player.y);
         if (player.x >= sx && player.x <= ex) flag = true;
     }
