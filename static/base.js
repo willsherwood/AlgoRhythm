@@ -137,6 +137,8 @@ var game = {
             panel.appendChild(this.createParameter("tolerance", "Tolerance (seconds)"));
             panel.appendChild(this.createParameter("jumpTime", "Jump Time (seconds)"));
             panel.appendChild(this.createParameter("jumpHeight", "Jump Height (pixels)"));
+            this.objects[0].bpm = 120;
+            this.objects[0].offset = 0;
         }
     },
 
