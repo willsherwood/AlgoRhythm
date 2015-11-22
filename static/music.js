@@ -2,24 +2,48 @@ function Music() {
     this.el = null;
     this.source = null;
     this.gain = null;
-    this.context = null;
+    this.buffer = null;
 }
 
-Music.prototype.init = function(url, loadCallback) {
-    this.el = document.createElement("audio");
-    this.el.src = url;
-    this.el.addEventListener("canplaythrough", loadCallback);
-    this.context = new (window.AudioContext || window.webkitAudioContext)();
-    this.source = this.context.createMediaElementSource(this.el);
-    this.gain = this.context.createGain();
+Music.context = null;
+
+Music.prototype.init = function(url, loadCallback, buffer) {
+    if (!Music.context)
+        Music.context = new (window.AudioContext || window.webkitAudioContext)();
+    this.gain = Music.context.createGain();
+    if (!buffer) {
+        this.el = document.createElement("audio");
+        this.el.src = url;
+        this.el.addEventListener("canplaythrough", loadCallback);
+        this.source = Music.context.createMediaElementSource(this.el);
+        this.source.connect(this.gain);
+        document.body.appendChild(this.el);
+    } else {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url, true);
+        xhr.responseType = "arraybuffer";
+        var t = this;
+        xhr.onload = function() {
+            if (xhr.status == 200) {
+                Music.context.decodeAudioData(xhr.response, function(buffer) {
+                    t.buffer = buffer;
+                });
+            }
+        };
+        xhr.send();
+    }
     this.gain.gain.value = 1;
-    this.source.connect(this.gain);
-    this.gain.connect(this.context.destination);
-    document.body.appendChild(this.el);
+    this.gain.connect(Music.context.destination);
 };
 
 Music.prototype.play = function() {
-    this.el.play();
+    if (this.buffer) {
+        var source = Music.context.createBufferSource();
+        source.buffer = this.buffer;
+        source.connect(this.gain);
+        source.start();
+    } else
+        this.el.play();
 };
 
 Music.prototype.getTime = function() {

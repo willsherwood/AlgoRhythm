@@ -62,13 +62,13 @@ var game = {
             this.music.play();
         }).bind(this));
         this.redSound = new Music();
-        this.redSound.init("../res/red.wav");
+        this.redSound.init("../res/red.wav", undefined, true);
         this.blueSound = new Music();
-        this.blueSound.init("../res/blue.wav");
+        this.blueSound.init("../res/blue.wav", undefined, true);
         this.jumpSound = new Music();
-        this.jumpSound.init("../res/jump.wav");
+        this.jumpSound.init("../res/jump.wav", undefined, true);
         this.failSound = new Music();
-        this.failSound.init("../res/fail.wav");
+        this.failSound.init("../res/fail.wav", undefined, true);
 
         var a = new XMLHttpRequest();
         a.onreadystatechange = (function() {
@@ -165,8 +165,8 @@ var game = {
     attackL: function() {
         console.log("Attacking left");
         var ce = closest(this.objects[0].objects, this.music.getTime());
-        if (ce[0] < 0) return;
-        if (this.objects[0].objects[ce[0]].type != 'red') return;
+        if (ce[0] < 0) return this.failSound.play();
+        if (this.objects[0].objects[ce[0]].type != 'red') return this.failSound.play();
         if (ce[1] < this.objects[0].tolerance) {
             this.objects[0].objects[ce[0]].dead = true;
             this.objects.push(new Particle("rgi"));
@@ -177,8 +177,8 @@ var game = {
     attackR: function() {
         console.log("Attacking right");
         var ce = closest(this.objects[0].objects, this.music.getTime());
-        if (ce[0] < 0) return;
-        if (this.objects[0].objects[ce[0]].type != 'blue') return;
+        if (ce[0] < 0) return this.failSound.play();
+        if (this.objects[0].objects[ce[0]].type != 'blue') return this.failSound.play();
         if (ce[1] < this.objects[0].tolerance) {
             this.objects[0].objects[ce[0]].dead = true;
             this.objects.push(new Particle("bgi"));
