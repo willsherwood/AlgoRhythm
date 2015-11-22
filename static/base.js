@@ -49,6 +49,8 @@ var game = {
     keymap: {},
 
     init: function() {
+        window.editing = this.queryString.editing === 'true';
+
         this.attackLKeys.forEach(function(k) {this.keymap[k] = 'attackL';}, this);
         this.attackRKeys.forEach(function(k) {this.keymap[k] = 'attackR';}, this);
         this.jumpKeys.forEach(function(k) {this.keymap[k] = 'jump';}, this);
@@ -97,16 +99,94 @@ var game = {
         this.failSound = new Music();
         this.failSound.init("../res/Audio/fail.ogg", undefined, true);
 
-        var a = new XMLHttpRequest();
-        a.onreadystatechange = (function() {
-            if (a.readyState == 4 && a.status == 200) {
-                var json = JSON.parse(a.responseText);
-                this.objects.push(new Level(json));
-                this.objects[0].init();
-            }
-        }).bind(this);
-        a.open("GET", "../levels/" + this.queryString.json, true);
-        a.send();
+        if (!this.queryString.editing) {
+            var a = new XMLHttpRequest();
+            a.onreadystatechange = (function() {
+                if (a.readyState == 4 && a.status == 200) {
+                    var json = JSON.parse(a.responseText);
+                    this.objects.push(new Level(json));
+                    this.objects[0].init();
+                }
+            }).bind(this);
+            a.open("GET", "../levels/" + this.queryString.json, true);
+            a.send();
+        } else {
+            this.objects.push(new Level());
+            this.objects[0].init();
+            // create editing panel
+            var panel = document.createElement("div");
+            panel.id = "editing";
+            document.body.appendChild(panel);
+            var pheading = document.createElement("h1");
+            pheading.textContent = "Editing Panel";
+            panel.appendChild(pheading);
+            this.music.el.controls = true;
+            panel.appendChild(this.music.el);
+            this.music.el.addEventListener("play", this.canvas.focus.bind(this.canvas));
+            var testButton = document.createElement("button");
+            testButton.id = "testbutton";
+            testButton.textContent = "Test Level";
+            testButton.addEventListener("click", this.test.bind(this));
+            panel.appendChild(testButton);
+            var stopTestButton = document.createElement("button");
+            stopTestButton.id = "stoptestbutton";
+            stopTestButton.textContent = "Stop Testing";
+            stopTestButton.addEventListener("click", this.stopTesting.bind(this));
+            panel.appendChild(stopTestButton);
+            panel.appendChild(this.createParameter("velocity", "Scroll speed (pixels/sec)"));
+            panel.appendChild(this.createParameter("tolerance", "Tolerance (seconds)"));
+            panel.appendChild(this.createParameter("jumpTime", "Jump Time (seconds)"));
+            panel.appendChild(this.createParameter("jumpHeight", "Jump Height (pixels)"));
+        }
+    },
+
+    test: function() {
+        // reset all dones and deads
+        var level = this.objects[0];
+        level.events.forEach(function(e) {delete e.done;});
+        level.objects.forEach(function(e) {delete e.dead;});
+        this.combo = 0;
+        this.score = 0;
+        this.updateScore();
+        this.currentEvent = 0;
+        window.editing = false;
+        this.music.setTime(0);
+        this.music.play();
+        this.canvas.focus();
+    },
+
+    createParameter: function(param, text) {
+        var p = document.createElement("p");
+        var label = document.createElement("label");
+        var input = document.createElement("input");
+        var level = this.objects[0];
+        input.type = "number";
+        input.id = "edit" + param;
+        input.value = level[param];
+        label.htmlFor = "edit" + param;
+        label.textContent = text;
+        p.appendChild(label);
+        p.appendChild(input);
+        input.addEventListener("change", function() {
+            level[param] = parseFloat(input.value);
+            input.value = level[param];
+            level.regenerate();
+        });
+        return p;
+    },
+
+    stopTesting: function() {
+        // reset all dones and deads
+        var level = this.objects[0];
+        level.events.forEach(function(e) {delete e.done;});
+        level.objects.forEach(function(e) {delete e.dead;});
+        this.combo = 0;
+        this.score = 0;
+        this.updateScore();
+        this.currentEvent = 0;
+        window.editing = true;
+        this.music.stop();
+        this.music.setTime(0);
     },
 
     redraw: function() {
@@ -114,28 +194,29 @@ var game = {
         this.controller.updateGamepads();
         this.bg.draw();
         for (var i = this.objects.length - 1; i >= 0; i--) {
-            this.objects[i].draw(this.ctx);
-            if (this.objects[i].dead)
-                this.objects.splice(i, 1);
+            if (!this.objects[i].dead)
+                this.objects[i].draw(this.ctx);
         }
         this.realCtx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.realCtx.drawImage(this.buffer, 0, 0);
-        if (this.objects.length > 0) {
-            if (this.currentEvent < this.objects[0].events.length) {
-                var ev = this.objects[0].events[this.currentEvent];
-                if (this.music.getTime() > ev.time + this.objects[0].tolerance) {
-                    this.currentEvent++;
-                    if (!ev.done) {
-                        this.score -= 5;
-                        this.combo = 0;
-                        // this is a MISS
-                        var ny = 200 - this.missY;
-                        var t = this;
-                        if (this.missY == 0)
-                            setTimeout(function() {t.missY = 0;}, 600);
-                        t.missY += 50;
-                        this.objects.push(new Particle("misi", this.width >> 1, ny));
-                        this.updateScore();
+        if (!window.editing) {
+            if (this.objects.length > 0) {
+                if (this.currentEvent < this.objects[0].events.length) {
+                    var ev = this.objects[0].events[this.currentEvent];
+                    if (this.music.getTime() > ev.time + this.objects[0].tolerance) {
+                        this.currentEvent++;
+                        if (!ev.done) {
+                            this.score -= 5;
+                            this.combo = 0;
+                            // this is a MISS
+                            var ny = 200 - this.missY;
+                            var t = this;
+                            if (this.missY == 0)
+                                setTimeout(function() {t.missY = 0;}, 600);
+                            t.missY += 50;
+                            this.objects.push(new Particle("misi", this.width >> 1, ny));
+                            this.updateScore();
+                        }
                     }
                 }
             }
@@ -173,7 +254,7 @@ var game = {
 
     keyPressed: function(e) {
         func = this.keymap[e];
-        if (func) {
+        if (func && !window.editing) {
             this[func]();
             var time = this.music.getTime();
             var level = this.objects[0];
@@ -209,13 +290,57 @@ var game = {
                     this.objects.push(new Particle("badi", game.width / 2, game.height / 2));
             }
             return false;
+        } else if (window.editing && func) {
+            if (player.jumping || player.sliding) {
+                if (func == 'jump' || func == 'slide') {
+                    this.failSound.play();
+                    return false;
+                }
+            }
+            var level = this.objects[0];
+            // TODO: snap
+            var time = this.music.getTime();
+            if (func == 'jump') {
+                this.generateObject("spike", time);
+                this.generateEvent("jump", time, false);
+                player.jump();
+                this.jumpSound.play();
+            } else if (func == 'attackL') {
+                this.generateObject("red", time);
+                this.generateEvent("attackL", time);
+                this.redSound.play();
+            } else if (func == 'attackR') {
+                this.generateObject("blue", time);
+                this.generateEvent("attackR", time);
+                this.blueSound.play();
+            } else if (func == 'slide') {
+                this.generateObject("ceiling", time);
+                this.generateEvent("slide", time);
+            } else {
+                alert("Unknown function " + func);
+            }
+            return false;
         } else return true;
+    },
+
+    generateObject: function(type, time) {
+        var i = binarySearch(this.objects[0].objects, time);
+        if (i < 0) i = ~i;
+        this.objects[0].objects.splice(i, 0, {"type": type, "time": time, "rand": Math.random()});
+    },
+
+    generateEvent: function(type, time, ground) {
+        var obj = {"type": type, "time": time};
+        if (type == 'jump') obj.ground = ground;
+        var i = binarySearch(this.objects[0].events, time);
+        if (i < 0) i = ~i;
+        this.objects[0].events.splice(i, 0, obj);
     },
 
     attackL: function() {
         console.log("Attacking left");
         var ce = closest(this.objects[0].objects, this.music.getTime());
-        if (ce[0] < 0) return this.failSound.play();
+        if (!this.objects[0].objects[ce[0]]) return this.failSound.play();
         if (this.objects[0].objects[ce[0]].type != 'red') return this.failSound.play();
         if (ce[1] < this.objects[0].tolerance) {
             this.objects[0].objects[ce[0]].dead = true;
@@ -227,7 +352,7 @@ var game = {
     attackR: function() {
         console.log("Attacking right");
         var ce = closest(this.objects[0].objects, this.music.getTime());
-        if (ce[0] < 0) return this.failSound.play();
+        if (!this.objects[0].objects[ce[0]]) return this.failSound.play();
         if (this.objects[0].objects[ce[0]].type != 'blue') return this.failSound.play();
         if (ce[1] < this.objects[0].tolerance) {
             this.objects[0].objects[ce[0]].dead = true;
@@ -277,6 +402,8 @@ var game = {
             if (this.combo > 500)
                 fs = 144;
             this.comboText.style.fontSize = fs + "pt";
+        } else {
+            this.comboText.textContent = "";
         }
     }
 };
@@ -316,7 +443,7 @@ window.trigger = function() {
 };
 
 function triggerLoad() {
-    if (window.allLoaded && window.musicLoaded)
+    if (window.allLoaded && window.musicLoaded && !game.queryString.editing)
         game.music.play();
 };
 

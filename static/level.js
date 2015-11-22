@@ -1,11 +1,36 @@
 function Level(json) {
-    this.objects = json.objects;
+    if (json) {
+        this.objects = json.objects;
+        this.objects.forEach(function(o) {o.rand = Math.random();});
+        this.events = json.events;
+        this.velocity = json.velocity; // pixels/sec
+        this.tolerance = json.tolerance;
+        this.jumpTime = json.jumpTime;
+        this.jumpHeight = json.jumpHeight;
+        this.platforms = [];
+        var land = 0;
+        for (var i = 0; i < this.events.length; i++) {
+            var e = this.events[i];
+            if (e.type != "jump" || !e.ground) continue;
+            this.platforms.push({start: land, end: e.time});
+            land = e.time + this.jumpTime;
+        }
+        this.platforms.push({start: land, end: Infinity});
+    } else {
+        this.objects = [];
+        this.events = [];
+        this.velocity = 1000;
+        this.tolerance = 0.15;
+        this.jumpTime = 0.4;
+        this.jumpHeight = 160;
+        this.platforms = [{start: 0, end: Infinity}];
+    }
+    this.jumpFactor = this.jumpHeight * 4 / (this.jumpTime * this.jumpTime);
+    this.images = {cone: null, pothole: null, redcoin: null, bluecoin: null};
+}
+
+Level.prototype.regenerate = function() {
     this.objects.forEach(function(o) {o.rand = Math.random();});
-    this.events = json.events;
-    this.velocity = json.velocity; // pixels/sec
-    this.tolerance = json.tolerance;
-    this.jumpTime = json.jumpTime;
-    this.jumpHeight = json.jumpHeight;
     this.jumpFactor = this.jumpHeight * 4 / (this.jumpTime * this.jumpTime);
     this.platforms = [];
     var land = 0;
@@ -16,8 +41,7 @@ function Level(json) {
         land = e.time + this.jumpTime;
     }
     this.platforms.push({start: land, end: Infinity});
-    this.images = {cone: null, pothole: null, redcoin: null, bluecoin: null};
-}
+};
 
 Level.prototype.init = function() {
     // load images

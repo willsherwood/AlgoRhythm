@@ -54,5 +54,13 @@ Music.prototype.getTime = function() {
     return this.el.currentTime;
 };
 
+Music.prototype.setTime = function(t) {
+    this.el.currentTime = t;
+}
+
+Music.prototype.isPaused = function() {
+    return this.el.paused;
+}
+
 window.musicModuleLoaded = true;
 window.trigger && trigger();
