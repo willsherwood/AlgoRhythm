@@ -19,6 +19,10 @@ var game = {
 
     controller: null,
 
+    redSound: null,
+    blueSound: null,
+    jumpSound: null,
+
     objects: [],
 
     attackLKeys: [81, 87, 69, 82, 84, 65, 83, 68, 70, 71, 90, 88, 67, 86],
@@ -43,13 +47,19 @@ var game = {
 
         this.controller = new Controller();
         this.controller.init(game.canvas);
-
-        this.music = new Music();
         this.controller.keyPressed = this.keyPressed.bind(this);
 
+        this.music = new Music();
         this.music.init("../res/Music/dancedance.mp3", (function() {
             this.music.play();
         }).bind(this));
+        this.redSound = new Music();
+        this.redSound.init("../res/red.wav");
+        this.blueSound = new Music();
+        this.blueSound.init("../res/blue.wav");
+        this.jumpSound = new Music();
+        this.jumpSound.init("../res/jump.wav");
+
         var a = new XMLHttpRequest();
         a.onreadystatechange = (function() {
             if (a.readyState == 4 && a.status == 200) {
