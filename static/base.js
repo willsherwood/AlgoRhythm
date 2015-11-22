@@ -59,6 +59,8 @@ var game = {
         this.blueSound.init("../res/blue.wav");
         this.jumpSound = new Music();
         this.jumpSound.init("../res/jump.wav");
+        this.failSound = new Music();
+        this.failSound.init("../res/fail.wav");
 
         var a = new XMLHttpRequest();
         a.onreadystatechange = (function() {
@@ -125,8 +127,8 @@ var game = {
         if (ce[1] < this.objects[0].tolerance) {
             this.objects[0].objects[ce[0]].dead = true;
             this.objects.push(new Particle("rgi"));
-            console.log("Success");
-        }
+            this.redSound.play();
+        } else this.failSound.play();
     },
 
     attackR: function() {
@@ -137,19 +139,22 @@ var game = {
         if (ce[1] < this.objects[0].tolerance) {
             this.objects[0].objects[ce[0]].dead = true;
             this.objects.push(new Particle("bgi"));
-            console.log("Success");
-        }
+            this.blueSound.play();
+        } else this.failSound.play();
     },
 
     jump: function() {
         console.log("Jumping");
-        if (!player.jumping)
+        if (!player.jumping) {
             player.jump();
+            this.jumpSound.play();
+        } else this.failSound.play();
     },
 
     slide: function() {
         if (!player.sliding)
             player.slide();
+        else this.failSound.play();
         console.log("Sliding");
     }
 };
