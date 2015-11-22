@@ -24,7 +24,7 @@ Music.prototype.play = function() {
 
 Music.prototype.getTime = function() {
     return this.el.currentTime;
-}
+};
 
 window.musicModuleLoaded = true;
 window.trigger && trigger();
