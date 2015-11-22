@@ -55,6 +55,22 @@ function play() {
     window.location = url;
 }
 
+function edit() {
+    if (!window.selectedRow) return;
+    var pairs = [];
+    var obj = JSON.parse(window.selectedRow.dataset.parameters);
+    obj.editing = true;
+    console.log(obj);
+    for (var key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            pairs.push(encodeURIComponent(key) + "=" + encodeURIComponent(obj[key]));
+        }
+    }
+    var qs = "?" + pairs.join("&");
+    var url = "game.html" + qs;
+    window.location = url;
+}
+
 var a = new XMLHttpRequest();
 a.onreadystatechange = function() {
     if (a.readyState == 4 && a.status == 200) {
@@ -79,6 +95,7 @@ a.open("GET", "../levels/songs.json", true);
 a.send();
 </script>
 <button id="playbutton">PLAY!</button>
+<button id="editbutton">Edit this map</button>
 <script type="text/javascript">
 document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("playbutton").addEventListener("click", play);
